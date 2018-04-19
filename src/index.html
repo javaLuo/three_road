@@ -25,16 +25,58 @@
             var g = new THREE.BoxGeometry(1,1,1);
             var m = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
             var c = new THREE.Mesh(g, m);
+            //c.position.set(10,0,0);
+            //c.position.copy(new THREE.Vector3(5,15,0));
+            c.quaternion.copy(new THREE.Vector4(12,2,2,2));
+            // c.scale.set(2,10,3);
             scene.add(c);
-            camera.position.z = 5;
+            camera.position.set(5,20,20);
+            camera.lookAt(new THREE.Vector3(0,0,0));
+
+            var MAX_POINTS = 500;
+            var geometry = new THREE.BufferGeometry();
+            var positions = new Float32Array(MAX_POINTS * 3);
+            geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            var material = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+
+            var line = new THREE.Line(geometry, material);
+            scene.add(line);
+
+            var p = line.geometry.attributes.position.array;
+
 
             animate();
 
+            function up() {
+                var x, y, z, index;
+                x = y = z = index = 0;
+
+                for ( var i = 0, l = MAX_POINTS; i < l; i ++ ) {
+                    x += ( Math.random() - 0.5 ) * 10;
+                    y += ( Math.random() - 0.5 ) * 10;
+                    z += ( Math.random() - 0.5 ) * 10;
+
+                    p[ index ++ ] = x;
+                    p[ index ++ ] = y;
+                    p[ index ++ ] = z;
+                }
+            }
+            up();
+
             // 渲染方法
+            var j = 2;
             function animate() {
                 requestAnimationFrame(animate);
                 c.rotation.x += 0.01;
                 c.rotation.y += 0.01;
+                line.geometry.setDrawRange(0, j++);
+                if(j>=8){
+                    up();
+                    line.geometry.attributes.position.needsUpdate = true;
+                    j = 2;
+                }
+
                 renderer.render(scene, camera);
             }
         </script>
