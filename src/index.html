@@ -45,7 +45,19 @@
 
             var p = line.geometry.attributes.position.array;
 
+            // 创建声音
+            var listener = new THREE.AudioListener();
+            camera.add(listener);
 
+            var sound = new THREE.Audio(listener);
+            var audioLoader = new THREE.AudioLoader();
+            audioLoader.load('assets/sound1.mp3', function(buffer){
+                sound.setBuffer(buffer);
+                sound.setLoop(true);
+                sound.setVolume(1.5);
+                sound.play();
+                console.log('SOUND:', sound.getPlaybackRate());
+            });
             animate();
 
             function up() {
