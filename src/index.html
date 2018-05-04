@@ -22,6 +22,9 @@
             renderer.setSize(window.innerWidth, window.innerHeight, true);
             document.body.appendChild(renderer.domElement);
 
+            var cubeCamera = new THREE.CubeCamera(1, 100000, 128);
+            scene.add(cubeCamera);
+
             var g = new THREE.BoxGeometry(1,1,1);
             var m = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
             var c = new THREE.Mesh(g, m);
@@ -32,6 +35,11 @@
             scene.add(c);
             camera.position.set(5,20,20);
             camera.lookAt(new THREE.Vector3(0,0,0));
+
+            camera.updateProjectionMatrix();
+            console.log("CAMERA1:",camera.toJSON());
+            cubeCamera.position.copy(c.position);
+            cubeCamera.update(renderer, scene);
 
             var MAX_POINTS = 500;
             var geometry = new THREE.BufferGeometry();
@@ -46,25 +54,25 @@
             var p = line.geometry.attributes.position.array;
 
             // 创建声音
-            var listener = new THREE.AudioListener();
-            camera.add(listener);
-
-            var sound = new THREE.PositionalAudio(listener);
-            var audioLoader = new THREE.AudioLoader();
-            audioLoader.load('assets/sound1.mp3', function(buffer){
-                sound.setBuffer(buffer);
-                sound.setLoop(true);
-                sound.setVolume(1.5);
-                sound.play();
-                console.log('INFO:', sound.panner);
-            });
-
-            var g1 = new THREE.SphereGeometry(10,12,8);
-            var m1 = new THREE.MeshBasicMaterial({ color: 0xff2200 });
-            var c1 = new THREE.Mesh(g1, m1);
-            scene.add(c1);
-            c1.add(sound);
+//            var listener = new THREE.AudioListener();
+//            camera.add(listener);
+//
+//            var sound = new THREE.PositionalAudio(listener);
+//            var audioLoader = new THREE.AudioLoader();
+//            audioLoader.load('assets/sound1.mp3', function(buffer){
+//                sound.setBuffer(buffer);
+//                sound.setLoop(true);
+//                sound.setVolume(1.5);
+//                sound.play();
+//            });
+//
+//            var g1 = new THREE.SphereGeometry(10,12,8);
+//            var m1 = new THREE.MeshBasicMaterial({ color: 0xff2200 });
+//            var c1 = new THREE.Mesh(g1, m1);
+//            scene.add(c1);
+//            c1.add(sound);
             animate();
+
 
             function up() {
                 var x, y, z, index;
