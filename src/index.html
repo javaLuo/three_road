@@ -21,12 +21,17 @@
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight, true);
             document.body.appendChild(renderer.domElement);
-
+            console.log('版本：', THREE.MOUSE);
             var cubeCamera = new THREE.CubeCamera(1, 100000, 128);
             scene.add(cubeCamera);
 
             var g = new THREE.BoxGeometry(1,1,1);
             var m = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            m.blending = THREE.CustomBlending;
+            m.blendEquation = THREE.AddEquation;
+            m.blendSrc = THREE.SrcAlphaFactor;
+            m.blendDst = THREE.OneMinusSrcAlphaFactor;
+
             var c = new THREE.Mesh(g, m);
             //c.position.set(10,0,0);
             //c.position.copy(new THREE.Vector3(5,15,0));
