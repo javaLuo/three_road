@@ -21,7 +21,7 @@
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize(window.innerWidth, window.innerHeight, true);
             document.body.appendChild(renderer.domElement);
-            console.log('版本：', THREE.MOUSE);
+            console.log('版本：', THREE.EventDispatcher);
             var cubeCamera = new THREE.CubeCamera(1, 100000, 128);
             scene.add(cubeCamera);
 
@@ -117,7 +117,7 @@
                 c.rotation.x += 0.01;
                 c.rotation.y += 0.01;
                 mesh1.rotation.x += 0.01;
-                
+
                 line.geometry.setDrawRange(0, j++);
                 if(j>=8){
                     up();
