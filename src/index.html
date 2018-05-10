@@ -13,38 +13,83 @@
         </style>
     </head>
     <body>
-
+        <div id="stats-output"></div>
         <script src="https://cdn.bootcss.com/three.js/91/three.js"></script>
+        <script src="./lib/Stats.js"></script>
+        <script src="./lib/dat.gui.js"></script>
+
         <script>
+            // 帧率辅助
+            var stats = new Stats();
+            stats.setMode(0);
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.left = '0px';
+            stats.domElement.style.top = '0px';
+            document.getElementById('stats-output').appendChild(stats.domElement);
+
+            // GUI辅助
+            var controls = new function(){
+                this.rotationSpeed = 0.01;
+                this.bouncingSpeed = 0.01;
+            };
+            var gui = new dat.GUI();
+            gui.add(controls, 'rotationSpeed', 0, 0.5); // 旋转速度
+            gui.add(controls, 'bouncingSpeed', 0, 0.5); // 弹跳速度
+
+            // 三要素
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
             var renderer = new THREE.WebGLRenderer();
+
+            camera.position.set(10,10,10);
+            camera.lookAt(new THREE.Vector3(0,0,0));
             renderer.setSize(window.innerWidth, window.innerHeight, true);
+            renderer.setClearColor(0x222222);
+            renderer.shadowMap.enabled = true;
             document.body.appendChild(renderer.domElement);
             console.log('版本：', THREE.EventDispatcher);
-            var cubeCamera = new THREE.CubeCamera(1, 100000, 128);
-            scene.add(cubeCamera);
 
+            // 轴辅助
+            var axes = new THREE.AxesHelper(20);
+            scene.add(axes);
+
+            function onResize(){
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            // 浏览器改变事件
+            window.addEventListener('resize', onResize, false);
+            // 基本立方体
             var g = new THREE.BoxGeometry(1,1,1);
-            var m = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            var m = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
             m.blending = THREE.CustomBlending;
             m.blendEquation = THREE.AddEquation;
             m.blendSrc = THREE.SrcAlphaFactor;
             m.blendDst = THREE.OneMinusSrcAlphaFactor;
 
             var c = new THREE.Mesh(g, m);
-            //c.position.set(10,0,0);
-            //c.position.copy(new THREE.Vector3(5,15,0));
             c.quaternion.copy(new THREE.Vector4(12,2,2,2));
-            // c.scale.set(2,10,3);
+            c.castShadow = true;
             scene.add(c);
-            camera.position.set(5,20,20);
-            camera.lookAt(new THREE.Vector3(0,0,0));
 
-            camera.updateProjectionMatrix();
-            console.log("CAMERA1:",camera.toJSON());
-            cubeCamera.position.copy(c.position);
-            cubeCamera.update(renderer, scene);
+            // 环境光
+            var ambientLight = new THREE.AmbientLight(0x222222, 0.5);
+            scene.add(ambientLight);
+
+            // 添加点光源
+            var spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.set(0,20,0);
+            spotLight.castShadow = true;
+            scene.add(spotLight);
+
+            // 添加一个球，当作光源的实体
+            var sp_g = new THREE.SphereGeometry(1,3,3);
+            var sp_m = new THREE.MeshBasicMaterial({ color: '#ffffff' });
+            var sp = new THREE.Mesh(sp_g, sp_m);
+            sp.position.copy(spotLight.position);
+            scene.add(sp);
 
             var MAX_POINTS = 500;
             var geometry = new THREE.BufferGeometry();
@@ -57,6 +102,8 @@
             scene.add(line);
 
             var p = line.geometry.attributes.position.array;
+
+            // GUI辅助
 
             // 创建声音
 //            var listener = new THREE.AudioListener();
@@ -77,19 +124,14 @@
 //            scene.add(c1);
 //            c1.add(sound);
 
-            // 创建自定义
-            var geometry1 = new THREE.BufferGeometry();
-            var vertices = new Float32Array([
-                -1.0,-1.0,1.0,
-                1.0,-1.0,1.0,
-                1.0,1.0,1.0,
-                1.0,1.0,1.0,
-                -1.0,1.0,1.0,
-                -1.0,-1.0,1.0
-            ]);
-            geometry1.addAttribute("position", new THREE.BufferAttribute(vertices, 3));
-            var material1 = new THREE.MeshBasicMaterial({ color: 0xff00ff });
-            var mesh1 = new THREE.Mesh(geometry1, material1);
+            // 平面
+            var plane = new THREE.PlaneGeometry(5,5);
+            var material1 = new THREE.MeshLambertMaterial({ color: 0xff00ff, side: THREE.DoubleSide });
+            var mesh1 = new THREE.Mesh(plane, material1);
+            mesh1.receiveShadow = true;
+            // mesh1.castShadow = true;
+            mesh1.position.set(0, -2, 0);
+            mesh1.rotation.set(Math.PI/2,0,0);
             scene.add(mesh1);
             animate();
 
@@ -112,11 +154,37 @@
 
             // 渲染方法
             var j = 2;
+            var ok = true;
+            var step = 0;
             function animate() {
                 requestAnimationFrame(animate);
-                c.rotation.x += 0.01;
-                c.rotation.y += 0.01;
-                mesh1.rotation.x += 0.01;
+                stats.update();
+
+                step += controls.bouncingSpeed;
+
+                c.position.x = (2*(Math.cos(step)));
+                c.position.y = (2*Math.abs(Math.sin(step)));
+
+                c.rotation.x += controls.rotationSpeed;
+                c.rotation.y += controls.rotationSpeed;
+
+                if(spotLight.position.y > 3) {
+                    spotLight.position.y -= 0.01;
+                    sp.position.copy(spotLight.position);
+                }
+                if(ok) {
+                    mesh1.position.y -=0.02;
+                    if (mesh1.position.y<-6) {
+                        ok = false;
+                    }
+                } else {
+                    mesh1.position.y +=0.02;
+                    if (mesh1.position.y>-1) {
+                        ok = true;
+                    }
+                }
+
+               // mesh1.rotation.x += 0.01;
 
                 line.geometry.setDrawRange(0, j++);
                 if(j>=8){
