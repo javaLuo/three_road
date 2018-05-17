@@ -84,6 +84,8 @@
             c.castShadow = true;
             scene.add(c);
 
+            var helper = new THREE.WireframeGeometry(c, 0xffffff);
+            scene.add(helper);
             // 环境光
             var ambientLight = new THREE.AmbientLight(0x222222, 0.5);
             scene.add(ambientLight);
