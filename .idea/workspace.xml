@@ -13,58 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="76" column="46" lean-forward="true" selection-start-line="76" selection-start-column="46" selection-end-line="76" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="05-custom-geometry.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demos/learing_three/src/chapter-02/05-custom-geometry.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="15" column="76" lean-forward="false" selection-start-line="15" selection-start-column="76" selection-end-line="15" selection-end-column="76" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="util.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demos/learing_three/src/js/util.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
-              <caret line="54" column="67" lean-forward="false" selection-start-line="54" selection-start-column="67" selection-end-line="54" selection-end-column="67" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SceneUtils.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demos/learing_three/libs/three/utils/SceneUtils.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="02-05.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demos/learing_three/src/chapter-02/js/02-05.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1870">
-              <caret line="85" column="29" lean-forward="false" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -108,8 +57,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="404" />
-    <option name="y" value="43" />
+    <option name="x" value="451" />
+    <option name="y" value="195" />
     <option name="width" value="1452" />
     <option name="height" value="1029" />
   </component>
@@ -128,7 +77,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -140,65 +88,18 @@
             <path>
               <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
               <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
-              <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-              <item name="learing_three" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
-              <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-              <item name="learing_three" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
-              <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-              <item name="learing_three" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-              <item name="three" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
-              <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-              <item name="learing_three" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-              <item name="three" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
-              <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-              <item name="learing_three" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
               <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-              <item name="learing_three" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="chapter-02" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
-              <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="demos" type="462c0819:PsiDirectoryNode" />
-              <item name="learing_three" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="官方学习笔记" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -322,32 +223,33 @@
       <workItem from="1525933533153" duration="8602000" />
       <workItem from="1526176840647" duration="4860000" />
       <workItem from="1526352697178" duration="2043000" />
-      <workItem from="1526524614170" duration="3275000" />
+      <workItem from="1526524614170" duration="5929000" />
+      <workItem from="1527141000822" duration="794000" />
+      <workItem from="1527148651136" duration="650000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73316000" />
+    <option name="totallyTimeSpent" value="77414000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="404" y="43" width="1452" height="1029" extended-state="0" />
-    <editor active="true" />
+    <frame x="451" y="195" width="1452" height="1029" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20403899" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20403899" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -639,7 +541,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/demos/learing_three/src/js/util.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
+        <state relative-caret-position="1188">
           <caret line="54" column="67" lean-forward="false" selection-start-line="54" selection-start-column="67" selection-end-line="54" selection-end-column="67" />
           <folding />
         </state>
@@ -649,14 +551,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="15" column="76" lean-forward="false" selection-start-line="15" selection-start-column="76" selection-end-line="15" selection-end-column="76" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="76" column="46" lean-forward="true" selection-start-line="76" selection-start-column="46" selection-end-line="76" selection-end-column="46" />
+        <state relative-caret-position="263">
+          <caret line="147" column="22" lean-forward="false" selection-start-line="147" selection-start-column="22" selection-end-line="147" selection-end-column="22" />
           <folding />
         </state>
       </provider>
