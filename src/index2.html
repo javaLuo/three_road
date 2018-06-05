@@ -18,7 +18,7 @@
 <script src="./lib/Stats.js"></script>
 <script src="./lib/dat.gui.js"></script>
 <script src="./lib/SceneUtils.js"></script>
-
+<script src="./index.js"></script>
 <script>
     // 帧率辅助
     var stats = new Stats();
@@ -33,7 +33,7 @@
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     var renderer = new THREE.WebGLRenderer();
 
-    camera.position.set(10,10,10);
+    camera.position.set(20,0,30);
     camera.lookAt(new THREE.Vector3(0,0,0));
     renderer.setSize(window.innerWidth, window.innerHeight, true);
     renderer.setClearColor(0x222222);
@@ -55,12 +55,12 @@
     window.addEventListener('resize', onResize, false);
 
     // 环境光
-    var ambientLight = new THREE.AmbientLight(0x222222, 0.5);
+    var ambientLight = new THREE.AmbientLight(0x666666, 0.8);
     scene.add(ambientLight);
 
     // 添加聚光灯光源
     var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.set(30,30,0);
+    spotLight.position.set(50,50,0);
     spotLight.castShadow = true;
     scene.add(spotLight);
 
@@ -106,7 +106,7 @@
     //var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, ms);
     var mesh = new THREE.Mesh(geom, m1);
     //var c = new THREE.Mesh(geom, m);
-    scene.add(mesh);
+   // scene.add(mesh);
 
 
 
@@ -117,16 +117,32 @@
     geom2.computeFaceNormals();
     console.log('C是什么：', geom2);
     var m2 = new THREE.MeshLambertMaterial({ color: 0xaa0000 });
+    m2.side = THREE.DoubleSide;
     var mesh2 = new THREE.Mesh(geom2, m2);
     mesh2.position.set(5,0,0);
-    scene.add(mesh2);
+    //scene.add(mesh2);
 
     var helper = new THREE.WireframeHelper(mesh, 0xffffff);
-    scene.add(helper);
+    //scene.add(helper);
     helper.material.linewidth = 20;
     helper.scale.x = 2;
     helper.scale.y = 2;
     helper.scale.z = 2;
+
+    camera.position.set(10, 0 ,50);
+    camera.lookAt(new THREE.Vector3(0,0,0));
+    var points = [];
+    const lang = 50;
+    for ( var i = 0; i < lang; i ++ ) {
+        const y = start(i);
+        points.push( new THREE.Vector2(y, i  ) );
+    }
+    object = new THREE.Mesh( new THREE.LatheBufferGeometry( points, 20 ), m2 );
+    console.log(object);
+    //object.position.set( 0, 0, Math.PI/2 );
+    object.rotation.set(0,0,-Math.PI/2);
+    scene.add( object );
+
     /** =================================
      * 以下不变
      * ================================== **/
