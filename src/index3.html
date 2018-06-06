@@ -22,6 +22,17 @@
 <script src="./lib/Reflector.js"></script>
 <script src="./index.js"></script>
 <script>
+    /**
+     * 进入高维 - https://threejs.org/examples/#webgl_clipping
+     * 表面颜色动态改变 - https://threejs.org/examples/#webgl_multiple_renderers
+     * 画面抖动效果 - https://threejs.org/examples/#webgl_postprocessing_glitch
+     * 高光 - https://threejs.org/examples/#webgl_postprocessing_unreal_bloom
+     * 这个或许可以用来做护盾的效果 - https://threejs.org/examples/#webgl_buffergeometry_drawcalls
+     * 这个把点弄小点换下颜色估计可以做护盾 - https://threejs.org/examples/#webgl_custom_attributes_points2
+     * 动态染色，闪光效果？ - https://threejs.org/examples/#webgl_simple_gi
+     * 标签 - https://threejs.org/examples/#css2d_label 用DIV来做的
+     * SVG做的LINES 可以用来做三维小地图 https://threejs.org/examples/#svg_lines
+     * **/
     // 帧率辅助
     var stats = new Stats();
     stats.setMode(0);
@@ -36,7 +47,7 @@
     var renderer = new THREE.WebGLRenderer();
 
     scene.fog = new THREE.Fog(0x000000, 0.015, 500);
-    camera.position.set(20,0,30);
+    // camera.position.set(20,0,30);
     camera.lookAt(new THREE.Vector3(0,0,0));
     renderer.setSize(window.innerWidth, window.innerHeight, true);
     renderer.setClearColor(0x222222);
@@ -92,7 +103,7 @@
     /** 用贝塞尔曲线生成水滴曲面 **/
     var points = [];
     const lang = 50;
-    for ( var i = 0; i < lang; i ++ ) {
+    for ( var i = 0; i < lang; i +=0.2) {
         const y = start(i);
         points.push( new THREE.Vector2(y, i  ) );
     }
@@ -125,7 +136,7 @@
         return texture;
     }
     /** 创建星空基本粒子系统 **/
-    var cloud;
+    var cloud, cloud2;
     function initStarSky(){
         //粒子材质
         var material = new THREE.PointsMaterial({
@@ -138,19 +149,24 @@
 
         var geom = new THREE.Geometry();
         var range = 500;
+        var rangex = 2000;
         for (var i = 0; i < 10000; i++) {
-            var particle = new THREE.Vector3(Math.random() * range - range / 2, Math.random() * range - range / 2, Math.random() * range - range / 2);
+            var particle = new THREE.Vector3(Math.random() * rangex - rangex / 2, Math.random() * range - range / 2, Math.random() * range - range / 2);
             geom.vertices.push(particle);
             var color = new THREE.Color(0x00ffcc);
             // color.setHSL(color.getHSL().h, color.getHSL().s, Math.random() * color.getHSL().l);
             geom.colors.push(color);
         }
 
-        //创建粒子系统，相当于abc中的c
+        // 创建粒子系统，相当于abc中的c
         cloud = new THREE.Points(geom, material);//参数是形状和材质
+        cloud2 = new THREE.Points(geom, material); // 创建第2个
+
         cloud.sortParticles = true;					//粒子重新排序
-        cloud.position.z = -100;
+        cloud2.sortParticles = true;
+        cloud2.position.x = 2000;
         scene.add(cloud);
+        scene.add(cloud2);
     }
 
     initStarSky();
@@ -164,9 +180,13 @@
     function animate() {
         requestAnimationFrame(animate);
         stats.update();
-        cloud.position.x -= 0.5;
-        if(cloud.position.x <= -100) {
-            cloud.position.x = 200;
+        cloud.position.x -= 1;
+        cloud2.position.x -= 1;
+        if(cloud.position.x <= -1500) {
+            cloud.position.x = 2500;
+        }
+        if(cloud2.position.x <= -1500) {
+            cloud2.position.x = 2500;
         }
 
         if ( count % 2 === 0 ) {

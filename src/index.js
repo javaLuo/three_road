@@ -26,7 +26,9 @@ function DeltaNTBezierFunc(ps, targ, t) {
 }
 
 function start(x) {
-    const dot_x = [0,2,25,50];
+    // const dot_x = [0,0,25,50];
+    // const dot_y = [0,15,5,0];
+    const dot_x = [0,0,25,50];
     const dot_y = [0,15,5,0];
     let t = 0.5;  // t的初始值
     for(let i=0;i<1000;i++){
