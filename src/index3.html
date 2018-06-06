@@ -52,7 +52,7 @@
 
     // 轴辅助
     var axes = new THREE.AxesHelper(20);
-    scene.add(axes);
+    //scene.add(axes);
 
     // 窗体大小改变时重置分辨率等参数
     function onResize(){
@@ -78,6 +78,17 @@
      * 以上不变
      * ================================== **/
 
+    /** 创建了两个六面体相机 **/
+    var cubeCamera1 = new THREE.CubeCamera(1, 1000, 256);
+    scene.add(cubeCamera1);
+    var cubeCamera2 = new THREE.CubeCamera(1, 1000, 256);
+    scene.add(cubeCamera2);
+
+    // 通过相机的画面作为贴图
+    var cubeMeterial = new THREE.MeshBasicMaterial({
+        envMap: cubeCamera2.renderTarget.texture,
+    });
+
     /** 用贝塞尔曲线生成水滴曲面 **/
     var points = [];
     const lang = 50;
@@ -85,24 +96,13 @@
         const y = start(i);
         points.push( new THREE.Vector2(y, i  ) );
     }
+
     /** THREE提供的根据曲线生成物体网格 **/
     const water_m = new THREE.LatheBufferGeometry(points, 20);
 
-    //water_m.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
-    /** 创建镜面材质物体 **/
-//    var material = new THREE.MeshBasicMaterial( {
-//        envMap: cubeCamera2.renderTarget.texture
-//    } );
-    const water_mirror = new THREE.Reflector(water_m, {
-        clipBias: 0.003,    // 反射衰减
-        textureWidth: window.innerWidth * window.devicePixelRatio, // 反射贴图宽度
-        textureHeight: window.innerHeight * window.devicePixelRatio, // 反射贴图高度
-        //color: 0xffffff,
-        recursion: 2, // 递归反射次数（镜子反射镜子）
-    });
-    // water_mirror.material.side = THREE.DoubleSide;
-    water_mirror.rotation.set(0, 0, Math.PI/2 * 45);
-    scene.add(water_mirror);
+    const water_mesh = new THREE.Mesh(water_m, cubeMeterial);
+    water_mesh.rotation.set(0,0,Math.PI/2);
+    scene.add(water_mesh);
 
     /** 慢速星空 **/
     /** star纹理 **/
@@ -160,10 +160,29 @@
     animate();
 
     // 渲染方法
+    var count=0;
     function animate() {
         requestAnimationFrame(animate);
         stats.update();
-        cloud.rotation.y -= 0.005;
+        cloud.position.x -= 0.5;
+        if(cloud.position.x <= -100) {
+            cloud.position.x = 200;
+        }
+
+        if ( count % 2 === 0 ) {
+
+            cubeMeterial.envMap = cubeCamera1.renderTarget.texture;
+            cubeCamera2.update( renderer, scene );
+
+        } else {
+
+            cubeMeterial.envMap = cubeCamera2.renderTarget.texture;
+            cubeCamera1.update( renderer, scene );
+
+        }
+
+        count ++;
+
         renderer.render(scene, camera);
     }
 </script>
