@@ -20,6 +20,13 @@
 <script src="./lib/SceneUtils.js"></script>
 <script src="./lib/OrbitControls.js"></script>
 <script src="./lib/Reflector.js"></script>
+
+<script src="./lib/EffectComposer.js"></script>
+<script src="./lib/RenderPass.js"></script>
+<script src="./lib/ShaderPass.js"></script>
+<script src="./lib/CopyShader.js"></script>
+<script src="./lib/LuminosityShader.js"></script>
+<script src="./lib/SobelOperatorShader.js"></script>
 <script src="./index.js"></script>
 <script>
     /**
@@ -33,6 +40,7 @@
      * 标签 - https://threejs.org/examples/#css2d_label 用DIV来做的
      * SVG做的LINES 可以用来做三维小地图 https://threejs.org/examples/#svg_lines
      * 边缘发光可以用外边框模拟 - https://threejs.org/examples/?q=line#webgl_postprocessing_outline
+     * 另一个描边例子 - https://threejs.org/examples/#webgl_postprocessing_sobel
      * **/
     // 帧率辅助
     var stats = new Stats();
@@ -64,13 +72,14 @@
 
     // 轴辅助
     var axes = new THREE.AxesHelper(20);
-    //scene.add(axes);
+    scene.add(axes);
 
     // 窗体大小改变时重置分辨率等参数
     function onResize(){
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
     }
 
     // 浏览器改变事件
@@ -166,8 +175,8 @@
         cloud.sortParticles = true;					//粒子重新排序
         cloud2.sortParticles = true;
         cloud2.position.x = 2000;
-       // scene.add(cloud);
-       // scene.add(cloud2);
+       scene.add(cloud);
+       scene.add(cloud2);
 
         /**
          * 线性立方体
@@ -194,11 +203,61 @@
         lineMesh = new THREE.LineSegments(geometry, material);
         lineMesh2 = lineMesh.clone();
         lineMesh2.position.x = 1800;
-        scene.add(lineMesh);
-        scene.add(lineMesh2);
+        //scene.add(lineMesh);
+        //scene.add(lineMesh2);
     }
 
     initStarSky();
+
+    /* 生成天空盒 */
+    var skybox;
+    function initSkyBox(){
+        var urls = ["lib/skybox/posx.jpg","lib/skybox/negx.jpg",
+            "lib/skybox/posy.jpg","lib/skybox/negy.jpg",
+            "lib/skybox/posz.jpg","lib/skybox/negz.jpg"];
+        var loader = new THREE.CubeTextureLoader();
+
+        var textureCube = loader.load(urls);	//这是采用同步的方式，也可以异步
+
+        var shader = THREE.ShaderLib["cube"];
+        shader.uniforms["tCube"].value = textureCube;
+        var material = new THREE.ShaderMaterial({
+            fragmentShader:shader.fragmentShader,
+            vertexShader:shader.vertexShader,
+            uniforms:shader.uniforms,
+            depthWrite:false,
+            side:THREE.BackSide
+        });
+        skybox = new THREE.Mesh(new THREE.BoxGeometry(2000,2000,2000),material);
+        scene.add(skybox);
+    }
+    initSkyBox();
+
+    // 飞船附加物
+    var material_ship = new THREE.LineBasicMaterial({ color: 0xff0000 });
+    var geometry_ship = new THREE.CircleGeometry(15, 32);
+    geometry_ship.vertices.shift();
+    var ship1_mesh = new THREE.LineLoop(geometry_ship, material_ship);
+    ship1_mesh.rotation.y = Math.PI/180 * 90;
+    ship1_mesh.position.x = 5;
+    scene.add(ship1_mesh);
+
+    // 后期处理
+    var composer = new THREE.EffectComposer(renderer);
+    var renderPass = new THREE.RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    var effectGrayScale = new THREE.ShaderPass(THREE.LuminosityShader);
+    composer.addPass(effectGrayScale);
+
+    var effectSobel = new THREE.ShaderPass(THREE.SobelOperatorShader);
+    console.log('什么玩意：', effectSobel);
+    effectSobel.renderToScreen = true;
+//    effectSobel.uniforms.resolution.value.x = window.innerWidth;
+//    effectSobel.uniforms.resolution.value.y = window.innerHeight;
+    composer.addPass(effectSobel);
+
+
     /** =================================
      * 以下不变
      * ================================== **/
@@ -239,8 +298,9 @@
         }
 
         count ++;
-
+        // composer.render();
         renderer.render(scene, camera);
+
     }
 </script>
 </body>
