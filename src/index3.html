@@ -32,6 +32,7 @@
      * 动态染色，闪光效果？ - https://threejs.org/examples/#webgl_simple_gi
      * 标签 - https://threejs.org/examples/#css2d_label 用DIV来做的
      * SVG做的LINES 可以用来做三维小地图 https://threejs.org/examples/#svg_lines
+     * 边缘发光可以用外边框模拟 - https://threejs.org/examples/?q=line#webgl_postprocessing_outline
      * **/
     // 帧率辅助
     var stats = new Stats();
@@ -136,7 +137,7 @@
         return texture;
     }
     /** 创建星空基本粒子系统 **/
-    var cloud, cloud2;
+    var cloud, cloud2, lineMesh, lineMesh2;
     function initStarSky(){
         //粒子材质
         var material = new THREE.PointsMaterial({
@@ -165,8 +166,36 @@
         cloud.sortParticles = true;					//粒子重新排序
         cloud2.sortParticles = true;
         cloud2.position.x = 2000;
-        scene.add(cloud);
-        scene.add(cloud2);
+       // scene.add(cloud);
+       // scene.add(cloud2);
+
+        /**
+         * 线性立方体
+         * **/
+        var geometry = new THREE.BufferGeometry();
+        var points = [];
+        /** 定义顶点 **/
+        for(let i=0; i<1000; i++) {
+            const x = Math.random() * 2000 - 1000;
+            const y = Math.random() * 500 - 250;
+            const z = Math.random() * 500 -250;
+            const lang = Math.random() * 100 + 200;
+            points.push(x,y,z,x+lang, y ,z);
+        }
+
+        geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( points, 3 ) ); // 设置顶点们
+
+        var material = new THREE.LineBasicMaterial({
+            color: 0x638DAF,
+            linewidth: 1,
+            linecap: 'square',
+            linejoin: 'bevel',
+        });
+        lineMesh = new THREE.LineSegments(geometry, material);
+        lineMesh2 = lineMesh.clone();
+        lineMesh2.position.x = 1800;
+        scene.add(lineMesh);
+        scene.add(lineMesh2);
     }
 
     initStarSky();
@@ -182,11 +211,19 @@
         stats.update();
         cloud.position.x -= 1;
         cloud2.position.x -= 1;
+        lineMesh.position.x -= 60;
+        lineMesh2.position.x -= 60;
         if(cloud.position.x <= -1500) {
             cloud.position.x = 2500;
         }
         if(cloud2.position.x <= -1500) {
             cloud2.position.x = 2500;
+        }
+        if(lineMesh.position.x <= -1500) {
+            lineMesh.position.x = 2300;
+        }
+        if(lineMesh2.position.x <= -1500) {
+            lineMesh2.position.x = 2300;
         }
 
         if ( count % 2 === 0 ) {
