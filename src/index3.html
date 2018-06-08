@@ -14,19 +14,23 @@
 </head>
 <body>
 <div id="stats-output"></div>
-<script src="https://cdn.bootcss.com/three.js/91/three.js"></script>
-<script src="./lib/Stats.js"></script>
-<script src="./lib/dat.gui.js"></script>
-<script src="./lib/SceneUtils.js"></script>
-<script src="./lib/OrbitControls.js"></script>
-<script src="./lib/Reflector.js"></script>
+<script src="https://cdn.bootcss.com/three.js/92/three.js"></script>
+<script src="./lib/Stats.js"></script>  <!-- 帧率辅助 -->
+<script src="./lib/dat.gui.js"></script> <!-- GUI辅助 -->
 
+<script src="./lib/OrbitControls.js"></script>  <!-- 镜头控制 -->
+<script src="./lib/Reflector.js"></script> <!-- 反光网格 -->
+
+<!-- 后处理相关 -->
 <script src="./lib/EffectComposer.js"></script>
+<script src="./lib/CopyShader.js"></script>
+<script src="./lib/FXAAShader.js"></script>
 <script src="./lib/RenderPass.js"></script>
 <script src="./lib/ShaderPass.js"></script>
-<script src="./lib/CopyShader.js"></script>
-<script src="./lib/LuminosityShader.js"></script>
-<script src="./lib/SobelOperatorShader.js"></script>
+<script src="./lib/OutlinePass.js"></script>
+<!-- /后处理相关 -->
+
+<script src="./lib/THREE.MeshLine.js"></script>
 <script src="./index.js"></script>
 <script>
     /**
@@ -41,6 +45,7 @@
      * SVG做的LINES 可以用来做三维小地图 https://threejs.org/examples/#svg_lines
      * 边缘发光可以用外边框模拟 - https://threejs.org/examples/?q=line#webgl_postprocessing_outline
      * 另一个描边例子 - https://threejs.org/examples/#webgl_postprocessing_sobel
+     * 简单的彗星尾巴（线条模拟） - https://www.clicktorelease.com/code/THREE.MeshLine/demo/birds.html
      * **/
     // 帧率辅助
     var stats = new Stats();
@@ -65,9 +70,9 @@
 
     // 鼠标控制辅助
     var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
-    cameraControls.target.set( 0, 40, 0);
-    cameraControls.maxDistance = 400;
-    cameraControls.minDistance = 10;
+    cameraControls.target.set( 0, 0, 0);
+    cameraControls.maxDistance = 200;
+    cameraControls.minDistance = 20;
     cameraControls.update();
 
     // 轴辅助
@@ -80,6 +85,7 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         composer.setSize(window.innerWidth, window.innerHeight);
+        effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
     }
 
     // 浏览器改变事件
@@ -93,7 +99,7 @@
     var spotLight = new THREE.SpotLight(0xffffff);
     spotLight.position.set(50,50,0);
     spotLight.castShadow = true;
-    scene.add(spotLight);
+   // scene.add(spotLight);
 
     /** =================================
      * 以上不变
@@ -231,33 +237,93 @@
         skybox = new THREE.Mesh(new THREE.BoxGeometry(2000,2000,2000),material);
         scene.add(skybox);
     }
-    initSkyBox();
+    // initSkyBox();
 
     // 飞船附加物
-    var material_ship = new THREE.LineBasicMaterial({ color: 0xff0000 });
-    var geometry_ship = new THREE.CircleGeometry(15, 32);
-    geometry_ship.vertices.shift();
-    var ship1_mesh = new THREE.LineLoop(geometry_ship, material_ship);
-    ship1_mesh.rotation.y = Math.PI/180 * 90;
-    ship1_mesh.position.x = 5;
-    scene.add(ship1_mesh);
 
-    // 后期处理
-    var composer = new THREE.EffectComposer(renderer);
-    var renderPass = new THREE.RenderPass(scene, camera);
-    composer.addPass(renderPass);
+    // 普通线 效果不是很好，加外边框效果也不好
+//    var material_ship = new THREE.LineBasicMaterial({ color: 0xff0000 });
+//    console.log('material_ship:', material_ship);
+//    var geometry_ship = new THREE.CircleGeometry(15, 32);
+//    geometry_ship.vertices.shift();
+//    var ship1_mesh = new THREE.Mesh(geometry_ship, material_ship);
+//    ship1_mesh.rotation.y = Math.PI/180 * 90;
+//    ship1_mesh.position.x = 5;
+//    scene.add(ship1_mesh);
 
-    var effectGrayScale = new THREE.ShaderPass(THREE.LuminosityShader);
-    composer.addPass(effectGrayScale);
+    /** 线圈 **/
+    var ship_line1_g = new THREE.Geometry();
+    for( let j = 0; j < Math.PI * 2; j += 2 * Math.PI / 180 ) {
+        let v = new THREE.Vector3( Math.cos( j ), Math.sin( j ), 0 );
+        ship_line1_g.vertices.push( v );
+    }
+    var line1 = new MeshLine();
+    line1.setGeometry(ship_line1_g);
+    var ship_line1_m = new MeshLineMaterial({
+        color: new THREE.Color(0x70c1b3),
+        lineWidth: .1,
+    });
+    var line1_mesh = new THREE.Mesh(line1.geometry, ship_line1_m);
+    line1_mesh.scale.set(3,3,3);
+    line1_mesh.rotation.y = Math.PI/180 * 90;
+    line1_mesh.position.x = 5;
+    scene.add(line1_mesh);
 
-    var effectSobel = new THREE.ShaderPass(THREE.SobelOperatorShader);
-    console.log('什么玩意：', effectSobel);
-    effectSobel.renderToScreen = true;
-//    effectSobel.uniforms.resolution.value.x = window.innerWidth;
-//    effectSobel.uniforms.resolution.value.y = window.innerHeight;
-    composer.addPass(effectSobel);
+    var line2_mesh = line1_mesh.clone();
+    line2_mesh.scale.set(8,8,8);
+    line2_mesh.position.x = 2;
+    scene.add(line2_mesh);
+
+    var line3_mesh = line1_mesh.clone();
+    line3_mesh.scale.set(1.5,1.5,1.5);
+    line3_mesh.position.x = -48;
+    scene.add(line3_mesh);
+
+    /** 3个红色三角 **/
+    var ship_line4_g = new THREE.Geometry();
+    ship_line4_g.vertices.push(new THREE.Vector3(0, 7, 0));
+    ship_line4_g.vertices.push(new THREE.Vector3(0, 5, 0));
+
+    var line4 = new MeshLine();
+    line4.setGeometry(ship_line4_g, function(p){return 1-p;});
+    var ship_line4_m = new MeshLineMaterial({
+        color: new THREE.Color(0xFF4308),
+        lineWidth: .1,
+    });
+    var line4_mesh = new THREE.Mesh(line4.geometry, ship_line4_m);
+    line4_mesh.position.set(2, 0, 0);
+
+    var line5_mesh = line4_mesh.clone();
+    var line6_mesh = line4_mesh.clone();
+
+    line5_mesh.rotation.x = Math.PI/180 * 120;
+    line6_mesh.rotation.x = Math.PI/180 * 240;
+
+    var line_group = new THREE.Group();
+    line_group.add(line4_mesh);
+    line_group.add(line5_mesh);
+    line_group.add(line6_mesh);
+    scene.add(line_group);
+
+    /** 尾巴上的3个三角形 **/
 
 
+    /** 后期处理 **/
+    var composer = new THREE.EffectComposer( renderer );
+
+    var renderPass = new THREE.RenderPass( scene, camera );
+    composer.addPass( renderPass );
+
+    var outlinePass = new THREE.OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
+    composer.addPass( outlinePass );
+
+    var effectFXAA = new THREE.ShaderPass( THREE.FXAAShader );
+
+    effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
+    effectFXAA.renderToScreen = true;
+    composer.addPass( effectFXAA );
+
+    outlinePass.selectedObjects = [];
     /** =================================
      * 以下不变
      * ================================== **/
@@ -268,6 +334,7 @@
     function animate() {
         requestAnimationFrame(animate);
         stats.update();
+        line_group.rotation.x -= 0.05;
         cloud.position.x -= 1;
         cloud2.position.x -= 1;
         lineMesh.position.x -= 60;
@@ -298,8 +365,8 @@
         }
 
         count ++;
-        // composer.render();
-        renderer.render(scene, camera);
+       composer.render();
+        //renderer.render(scene, camera);
 
     }
 </script>
