@@ -16,7 +16,6 @@
 <div id="stats-output"></div>
 <script src="https://cdn.bootcss.com/three.js/92/three.js"></script>
 <script src="./lib/Stats.js"></script>  <!-- 帧率辅助 -->
-<script src="./lib/dat.gui.js"></script> <!-- GUI辅助 -->
 
 <script src="./lib/OrbitControls.js"></script>  <!-- 镜头控制 -->
 <script src="./lib/Reflector.js"></script> <!-- 反光网格 -->
@@ -77,7 +76,7 @@
 
     // 轴辅助
     var axes = new THREE.AxesHelper(20);
-    scene.add(axes);
+    // scene.add(axes);
 
     // 窗体大小改变时重置分辨率等参数
     function onResize(){
@@ -218,9 +217,9 @@
     /* 生成天空盒 */
     var skybox;
     function initSkyBox(){
-        var urls = ["lib/skybox/posx.jpg","lib/skybox/negx.jpg",
-            "lib/skybox/posy.jpg","lib/skybox/negy.jpg",
-            "lib/skybox/posz.jpg","lib/skybox/negz.jpg"];
+        var urls = ["lib/skybox/posx.png","lib/skybox/negx.png",
+            "lib/skybox/posy.png","lib/skybox/negy.png",
+            "lib/skybox/posz.png","lib/skybox/negz.png"];
         var loader = new THREE.CubeTextureLoader();
 
         var textureCube = loader.load(urls);	//这是采用同步的方式，也可以异步
@@ -237,33 +236,42 @@
         skybox = new THREE.Mesh(new THREE.BoxGeometry(2000,2000,2000),material);
         scene.add(skybox);
     }
-    // initSkyBox();
+    initSkyBox();
 
     // 飞船附加物
 
-    // 普通线 效果不是很好，加外边框效果也不好
-//    var material_ship = new THREE.LineBasicMaterial({ color: 0xff0000 });
-//    console.log('material_ship:', material_ship);
-//    var geometry_ship = new THREE.CircleGeometry(15, 32);
-//    geometry_ship.vertices.shift();
-//    var ship1_mesh = new THREE.Mesh(geometry_ship, material_ship);
-//    ship1_mesh.rotation.y = Math.PI/180 * 90;
-//    ship1_mesh.position.x = 5;
-//    scene.add(ship1_mesh);
-
     /** 线圈 **/
-    var ship_line1_g = new THREE.Geometry();
-    for( let j = 0; j < Math.PI * 2; j += 2 * Math.PI / 180 ) {
+    var ship_g = new THREE.Geometry();
+    for( let j = 0; j < Math.PI * 2.1; j += 2 * Math.PI / 180 ) {
         let v = new THREE.Vector3( Math.cos( j ), Math.sin( j ), 0 );
-        ship_line1_g.vertices.push( v );
+        ship_g.vertices.push( v );
     }
-    var line1 = new MeshLine();
-    line1.setGeometry(ship_line1_g);
-    var ship_line1_m = new MeshLineMaterial({
+    var line = new MeshLine();
+    line.setGeometry(ship_g);
+    // 实现线圈
+    var ship_line = new MeshLineMaterial({
         color: new THREE.Color(0x70c1b3),
+        lineWidth: .05,
+        side: THREE.DoubleSide
+    });
+
+    // 虚线线圈
+    var ship_dash = new MeshLineMaterial({
+        color: new THREE.Color(0x70c1b3),
+        lineWidth: .05,
+        dashArray: 0.333,
+        dashRatio: 0.666,
+        transparent: true,
+        side: THREE.DoubleSide
+    });
+
+    // 红色实线材质
+    var ship_line4_m = new MeshLineMaterial({
+        color: new THREE.Color(0xFF4308),
         lineWidth: .1,
     });
-    var line1_mesh = new THREE.Mesh(line1.geometry, ship_line1_m);
+
+    var line1_mesh = new THREE.Mesh(line.geometry, ship_line);
     line1_mesh.scale.set(3,3,3);
     line1_mesh.rotation.y = Math.PI/180 * 90;
     line1_mesh.position.x = 5;
@@ -277,7 +285,22 @@
     var line3_mesh = line1_mesh.clone();
     line3_mesh.scale.set(1.5,1.5,1.5);
     line3_mesh.position.x = -48;
+
     scene.add(line3_mesh);
+
+    var q4_mesh = line1_mesh.clone();
+    q4_mesh.scale.set(1.5,1.5,1.5);
+    q4_mesh.position.x = 1;
+    q4_mesh.material.color = new THREE.Color(0xff0000);
+    console.log(q4_mesh.material);
+
+    scene.add(q4_mesh);
+
+    var dash1_mesh = new THREE.Mesh(line.geometry, ship_dash);
+    dash1_mesh.scale.set(3.3,3.3,3.3);
+    dash1_mesh.rotation.y = Math.PI/180 * 90;
+    dash1_mesh.position.x = 5;
+    scene.add(dash1_mesh);
 
     /** 3个红色三角 **/
     var ship_line4_g = new THREE.Geometry();
@@ -286,10 +309,7 @@
 
     var line4 = new MeshLine();
     line4.setGeometry(ship_line4_g, function(p){return 1-p;});
-    var ship_line4_m = new MeshLineMaterial({
-        color: new THREE.Color(0xFF4308),
-        lineWidth: .1,
-    });
+
     var line4_mesh = new THREE.Mesh(line4.geometry, ship_line4_m);
     line4_mesh.position.set(2, 0, 0);
 
@@ -334,7 +354,8 @@
     function animate() {
         requestAnimationFrame(animate);
         stats.update();
-        line_group.rotation.x -= 0.05;
+        line_group.rotation.x += 0.01;
+        dash1_mesh.rotation.x -= 0.01;
         cloud.position.x -= 1;
         cloud2.position.x -= 1;
         lineMesh.position.x -= 60;
