@@ -76,7 +76,7 @@
 
     // 轴辅助
     var axes = new THREE.AxesHelper(20);
-    // scene.add(axes);
+    scene.add(axes);
 
     // 窗体大小改变时重置分辨率等参数
     function onResize(){
@@ -118,9 +118,51 @@
     /** 用贝塞尔曲线生成水滴曲面 **/
     var points = [];
     const lang = 50;
-    for ( var i = 0; i < lang; i +=0.2) {
+    for ( let i = 0; i < lang; i +=0.2) {
         const y = start(i);
         points.push( new THREE.Vector2(y, i  ) );
+    }
+    console.log('有多少个啊：', points);
+    /**
+     * points包含了(y,x)坐标，通过这个定位光锥的坐标
+     * **/
+    const cone_texture = new THREE.TextureLoader().load("./lib/imgs/lightray_red.jpg");
+    const cone_group = new THREE.Group();
+
+    for(let i=25; i< points.length; i+=25) {
+        const p = createCone(points[i]);
+        cone_group.add(p.plane1);
+        cone_group.add(p.plane2);
+    }
+    /** 光锥创建方法 **/
+
+    function createCone(position) {
+        var material = new THREE.MeshBasicMaterial({ // 基本材质
+            map: cone_texture,
+            transparent: true,
+            depthTest: true,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending
+        });
+        var height = 1.5;
+        var width = 0.5;
+        var geometry = new THREE.PlaneGeometry(width, height);
+        var matrix1 = new THREE.Matrix4();
+        var plane1 = new THREE.Mesh(geometry, material);
+        // matrix1.makeRotationY(Math.PI/180 * 90);
+       // matrix1.setPosition(new THREE.Vector3(0,0, height/-2));
+      // geometry.applyMatrix(matrix1);
+
+
+        plane1.rotation.z = Math.PI / 180 * 90;
+        plane1.position.y = height * 100;
+        let plane2 = plane1.clone();
+        plane2.rotation.x = Math.PI / 180 * 90;
+
+        plane1.position.copy(new THREE.Vector3(position.x + height / 2, position.y, 0));
+        plane2.position.copy(new THREE.Vector3(position.x + height / 2, position.y, 0));
+
+        return {plane1: plane1, plane2: plane2};
     }
 
     /** THREE提供的根据曲线生成物体网格 **/
@@ -129,6 +171,16 @@
     const water_mesh = new THREE.Mesh(water_m, cubeMeterial);
     water_mesh.rotation.set(0,0,Math.PI/2);
     scene.add(water_mesh);
+
+    //cone_group.rotation.set(0,-Math.PI/180 * 90,0);
+    var cone_group1 = cone_group.clone();
+    var cone_group2 = cone_group.clone();
+    cone_group1.rotation.y = Math.PI / 180 * 120;
+    cone_group2.rotation.y = Math.PI / 180 * -120;
+    water_mesh.add(cone_group);
+    water_mesh.add(cone_group1);
+    water_mesh.add(cone_group2);
+
 
     /** 慢速星空 **/
     /** star纹理 **/
@@ -265,12 +317,21 @@
         side: THREE.DoubleSide
     });
 
+    // 红色虚线材质
+    var ship_red_dash = new MeshLineMaterial({
+        color: new THREE.Color(0xFF4308),
+        dashArray: 0.5,
+        dashRatio: 0.5,
+        transparent: true,
+        lineWidth: .05,
+    });
+
     // 红色实线材质
-    var ship_line4_m = new MeshLineMaterial({
+    var ship_red_line = new MeshLineMaterial({
         color: new THREE.Color(0xFF4308),
         lineWidth: .1,
     });
-
+    
     var line1_mesh = new THREE.Mesh(line.geometry, ship_line);
     line1_mesh.scale.set(3,3,3);
     line1_mesh.rotation.y = Math.PI/180 * 90;
@@ -285,16 +346,18 @@
     var line3_mesh = line1_mesh.clone();
     line3_mesh.scale.set(1.5,1.5,1.5);
     line3_mesh.position.x = -48;
-
     scene.add(line3_mesh);
 
-    var q4_mesh = line1_mesh.clone();
+    var q4_mesh = new THREE.Mesh(line.geometry, ship_red_dash);
     q4_mesh.scale.set(1.5,1.5,1.5);
+    q4_mesh.rotation.y = Math.PI/180 * 90;
     q4_mesh.position.x = 1;
-    q4_mesh.material.color = new THREE.Color(0xff0000);
-    console.log(q4_mesh.material);
-
     scene.add(q4_mesh);
+
+    var q5_mesh = q4_mesh.clone();
+    q5_mesh.scale.set(1.3,1.3,1.3);
+    q5_mesh.position.x = -48.5;
+    scene.add(q5_mesh);
 
     var dash1_mesh = new THREE.Mesh(line.geometry, ship_dash);
     dash1_mesh.scale.set(3.3,3.3,3.3);
@@ -310,7 +373,7 @@
     var line4 = new MeshLine();
     line4.setGeometry(ship_line4_g, function(p){return 1-p;});
 
-    var line4_mesh = new THREE.Mesh(line4.geometry, ship_line4_m);
+    var line4_mesh = new THREE.Mesh(line4.geometry, ship_red_line);
     line4_mesh.position.set(2, 0, 0);
 
     var line5_mesh = line4_mesh.clone();
@@ -360,6 +423,8 @@
         cloud2.position.x -= 1;
         lineMesh.position.x -= 60;
         lineMesh2.position.x -= 60;
+        q4_mesh.rotation.x -= 0.04;
+        q5_mesh.rotation.x -= 0.04;
         if(cloud.position.x <= -1500) {
             cloud.position.x = 2500;
         }
