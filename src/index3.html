@@ -56,10 +56,10 @@
 
     // 三要素
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1500);
     var renderer = new THREE.WebGLRenderer();
 
-    scene.fog = new THREE.Fog(0x000000, 0.015, 500);
+   // scene.fog = new THREE.Fog(0x000000, 0.015, 1800);
     // camera.position.set(20,0,30);
     camera.lookAt(new THREE.Vector3(0,0,0));
     renderer.setSize(window.innerWidth, window.innerHeight, true);
@@ -170,7 +170,7 @@
 
     const water_mesh = new THREE.Mesh(water_m, cubeMeterial);
     water_mesh.rotation.set(0,0,Math.PI/2);
-    scene.add(water_mesh);
+   scene.add(water_mesh);
 
     //cone_group.rotation.set(0,-Math.PI/180 * 90,0);
     var cone_group1 = cone_group.clone();
@@ -232,8 +232,8 @@
         cloud.sortParticles = true;					//粒子重新排序
         cloud2.sortParticles = true;
         cloud2.position.x = 2000;
-       scene.add(cloud);
-       scene.add(cloud2);
+      // scene.add(cloud);
+     //  scene.add(cloud2);
 
         /**
          * 线性立方体
@@ -242,9 +242,9 @@
         var points = [];
         /** 定义顶点 **/
         for(let i=0; i<1000; i++) {
-            const x = Math.random() * 2000 - 1000;
+            const x = Math.random() * 3000 - 1500;
             const y = Math.random() * 500 - 250;
-            const z = Math.random() * 500 -250;
+            const z = Math.random() * 500 - 250;
             const lang = Math.random() * 100 + 200;
             points.push(x,y,z,x+lang, y ,z);
         }
@@ -259,12 +259,43 @@
         });
         lineMesh = new THREE.LineSegments(geometry, material);
         lineMesh2 = lineMesh.clone();
-        lineMesh2.position.x = 1800;
-        //scene.add(lineMesh);
-        //scene.add(lineMesh2);
+        lineMesh2.position.x = 3000;
+        scene.add(lineMesh);
+        scene.add(lineMesh2);
     }
 
-    initStarSky();
+   initStarSky();
+
+    /** 高速时空隧道 **/
+    const tunnel_points = [];
+    for (var i = 0; i <= 4; i += 1) {
+        if(i===0 || i===4){
+            tunnel_points.push(new THREE.Vector3(1, 600 * i));
+        }
+        tunnel_points.push(new THREE.Vector3(100, 600 * i));
+    }
+
+    const tunnel_geometry = new THREE.LatheBufferGeometry(tunnel_points, 20);
+    // const tunnel_texture = new THREE.TextureLoader().load("./lib/imgs/001_electric.jpg");
+    const tunnel_texture = THREE.ImageUtils.loadTexture("./lib/imgs/001_electric.jpg");
+    tunnel_texture.wrapT = tunnel_texture.wrapS = THREE.RepeatWrapping;
+    tunnel_texture.repeat.set(6, 6);
+
+    const tunnel_material = new THREE.MeshBasicMaterial({
+        side: THREE.BackSide,
+        transparent: true,
+        alphaMap: tunnel_texture,
+        shininess: 0,
+        color: 0x333399,
+    });
+   //tunnel_material.map.wrapS = THREE.RepeatWrapping;
+   //tunnel_material.map.wrapT = THREE.RepeatWrapping;
+   //tunnel_material.map.repeat.set(6, 6);
+
+    const tunnel = new THREE.Mesh(tunnel_geometry, tunnel_material);
+    tunnel.rotation.z = Math.PI/180 * 90;
+    tunnel.position.x = 1200;
+    scene.add(tunnel);
 
     /* 生成天空盒 */
     var skybox;
@@ -288,7 +319,7 @@
         skybox = new THREE.Mesh(new THREE.BoxGeometry(2000,2000,2000),material);
         scene.add(skybox);
     }
-    initSkyBox();
+   // initSkyBox();
 
     // 飞船附加物
 
@@ -410,10 +441,10 @@
     /** =================================
      * 以下不变
      * ================================== **/
-    animate();
-
-    // 渲染方法
+        // 渲染方法
     var count=0;
+    var time = new THREE.Clock();
+
     function animate() {
         requestAnimationFrame(animate);
         stats.update();
@@ -425,17 +456,20 @@
         lineMesh2.position.x -= 60;
         q4_mesh.rotation.x -= 0.04;
         q5_mesh.rotation.x -= 0.04;
+        tunnel_texture.offset.x += 0.01;
+        tunnel_texture.offset.y -= 0.06;
+      //  tunnel_material.color.setHSL(Math.abs(Math.cos((time.getElapsedTime() / 10))), 1, 0.5);
         if(cloud.position.x <= -1500) {
             cloud.position.x = 2500;
         }
         if(cloud2.position.x <= -1500) {
             cloud2.position.x = 2500;
         }
-        if(lineMesh.position.x <= -1500) {
-            lineMesh.position.x = 2300;
+        if(lineMesh.position.x <= -3000) {
+            lineMesh.position.x = 3000;
         }
-        if(lineMesh2.position.x <= -1500) {
-            lineMesh2.position.x = 2300;
+        if(lineMesh2.position.x <= -3000) {
+            lineMesh2.position.x = 3000;
         }
 
         if ( count % 2 === 0 ) {
@@ -449,12 +483,11 @@
             cubeCamera1.update( renderer, scene );
 
         }
-
         count ++;
        composer.render();
         //renderer.render(scene, camera);
-
     }
+    animate();
 </script>
 </body>
 </html>
