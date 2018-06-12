@@ -2,13 +2,22 @@
 <html>
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>three.js css2d - label</title>
     <style>
         body{
+            background-color: #000;
             margin: 0;
         }
         canvas{
+            display: block;
             width: 100%;
             height: 100%;
+        }
+        .label{
+            color: #ffffff;
+            background-color: #cccccc;
+            padding: 20px;
         }
     </style>
 </head>
@@ -19,6 +28,7 @@
 
 <script src="./lib/OrbitControls.js"></script>  <!-- 镜头控制 -->
 <script src="./lib/Reflector.js"></script> <!-- 反光网格 -->
+<script src="./lib/CSS2DRenderer.js"></script> <!-- 2D DIV -->
 
 <!-- 后处理相关 -->
 <script src="./lib/EffectComposer.js"></script>
@@ -68,7 +78,7 @@
     document.body.appendChild(renderer.domElement);
 
     // 鼠标控制辅助
-    var cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+    var cameraControls = new THREE.OrbitControls(camera);
     cameraControls.target.set( 0, 0, 0);
     cameraControls.maxDistance = 200;
     cameraControls.minDistance = 20;
@@ -277,7 +287,7 @@
 
     const tunnel_geometry = new THREE.LatheBufferGeometry(tunnel_points, 20);
     // const tunnel_texture = new THREE.TextureLoader().load("./lib/imgs/001_electric.jpg");
-    const tunnel_texture = THREE.ImageUtils.loadTexture("./lib/imgs/001_electric.jpg");
+    const tunnel_texture = new THREE.TextureLoader().load("./lib/imgs/001_electric.jpg");
     tunnel_texture.wrapT = tunnel_texture.wrapS = THREE.RepeatWrapping;
     tunnel_texture.repeat.set(6, 6);
 
@@ -285,8 +295,7 @@
         side: THREE.BackSide,
         transparent: true,
         alphaMap: tunnel_texture,
-        shininess: 0,
-        color: 0x333399,
+        color: 0x3333aa,
     });
    //tunnel_material.map.wrapS = THREE.RepeatWrapping;
    //tunnel_material.map.wrapT = THREE.RepeatWrapping;
@@ -419,7 +428,24 @@
     line_group.add(line6_mesh);
     scene.add(line_group);
 
-    /** 尾巴上的3个三角形 **/
+    /**
+     * 添加铭牌
+     * **/
+    var label1Div = document.createElement( 'div' );
+    label1Div.className = 'label';
+    label1Div.textContent = 'Water!!!!!!!!';
+
+    var label1 = new THREE.CSS2DObject( label1Div );
+    console.log('label有了吗：', label1);
+    label1.position.set( -5, 15, 5 ); // 将其坐标设置为原点偏上
+    water_mesh.add( label1 );
+
+    /** 铭牌渲染器 **/
+    const labelRenderer = new THREE.CSS2DRenderer();
+    labelRenderer.setSize( window.innerWidth, window.innerHeight );
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = 0;
+    document.body.appendChild( labelRenderer.domElement );
 
 
     /** 后期处理 **/
@@ -485,6 +511,7 @@
         }
         count ++;
        composer.render();
+        labelRenderer.render( scene, camera );
         //renderer.render(scene, camera);
     }
     animate();
