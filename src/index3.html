@@ -14,10 +14,59 @@
             width: 100%;
             height: 100%;
         }
-        .label{
+        .title2d{
+            position: relative;
+            width: 150px;
+            height: 40px;
+            text-align: center;
+        }
+        .title2d .t{
+            position: absolute;
+            top:0;
+            left:0;
+            width: 100%;
+            height: 100%;
+            line-height: 40px;
+            font-size: 16px;
             color: #ffffff;
-            background-color: #cccccc;
-            padding: 20px;
+            z-index: 2;
+        }
+        .title2d .b{
+            position: absolute;
+            top:0;
+            left:0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,.3);
+        }
+        .title2d .l1{
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top:0;
+            left:0;
+            border-top: solid 1px #00ff00;
+            border-left: solid 1px #00ff00;
+        }
+        .title2d .l2{
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            bottom:0;
+            right:0;
+            border-bottom: solid 1px #00ff00;
+            border-right: solid 1px #00ff00;
+        }
+        .label2{
+            width: 300px;
+            color: #ffffff;
+            font-size: 12px;
+        }
+        .label2 p{
+
+        }
+        .label2 i{
+            color: #00ff00;
         }
     </style>
 </head>
@@ -94,6 +143,7 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         composer.setSize(window.innerWidth, window.innerHeight);
+        labelRenderer.setSize(window.innerWidth, window.innerHeight);
         effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
     }
 
@@ -116,8 +166,10 @@
 
     /** 创建了两个六面体相机 **/
     var cubeCamera1 = new THREE.CubeCamera(1, 1000, 256);
+    cubeCamera1.position.x = 8;
     scene.add(cubeCamera1);
     var cubeCamera2 = new THREE.CubeCamera(1, 1000, 256);
+    cubeCamera2.position.x = 8;
     scene.add(cubeCamera2);
 
     // 通过相机的画面作为贴图
@@ -132,7 +184,7 @@
         const y = start(i);
         points.push( new THREE.Vector2(y, i  ) );
     }
-    console.log('有多少个啊：', points);
+
     /**
      * points包含了(y,x)坐标，通过这个定位光锥的坐标
      * **/
@@ -180,6 +232,9 @@
 
     const water_mesh = new THREE.Mesh(water_m, cubeMeterial);
     water_mesh.rotation.set(0,0,Math.PI/2);
+    water_mesh.position.x = 15;
+
+    console.log(water_mesh);
    scene.add(water_mesh);
 
     //cone_group.rotation.set(0,-Math.PI/180 * 90,0);
@@ -286,7 +341,6 @@
     }
 
     const tunnel_geometry = new THREE.LatheBufferGeometry(tunnel_points, 20);
-    // const tunnel_texture = new THREE.TextureLoader().load("./lib/imgs/001_electric.jpg");
     const tunnel_texture = new THREE.TextureLoader().load("./lib/imgs/001_electric.jpg");
     tunnel_texture.wrapT = tunnel_texture.wrapS = THREE.RepeatWrapping;
     tunnel_texture.repeat.set(6, 6);
@@ -297,9 +351,6 @@
         alphaMap: tunnel_texture,
         color: 0x3333aa,
     });
-   //tunnel_material.map.wrapS = THREE.RepeatWrapping;
-   //tunnel_material.map.wrapT = THREE.RepeatWrapping;
-   //tunnel_material.map.repeat.set(6, 6);
 
     const tunnel = new THREE.Mesh(tunnel_geometry, tunnel_material);
     tunnel.rotation.z = Math.PI/180 * 90;
@@ -375,34 +426,34 @@
     var line1_mesh = new THREE.Mesh(line.geometry, ship_line);
     line1_mesh.scale.set(3,3,3);
     line1_mesh.rotation.y = Math.PI/180 * 90;
-    line1_mesh.position.x = 5;
+    line1_mesh.position.x = 20;
     scene.add(line1_mesh);
 
     var line2_mesh = line1_mesh.clone();
     line2_mesh.scale.set(8,8,8);
-    line2_mesh.position.x = 2;
+    line2_mesh.position.x = 17;
     scene.add(line2_mesh);
 
     var line3_mesh = line1_mesh.clone();
     line3_mesh.scale.set(1.5,1.5,1.5);
-    line3_mesh.position.x = -48;
+    line3_mesh.position.x = -33;
     scene.add(line3_mesh);
 
     var q4_mesh = new THREE.Mesh(line.geometry, ship_red_dash);
     q4_mesh.scale.set(1.5,1.5,1.5);
     q4_mesh.rotation.y = Math.PI/180 * 90;
-    q4_mesh.position.x = 1;
+    q4_mesh.position.x = 16;
     scene.add(q4_mesh);
 
     var q5_mesh = q4_mesh.clone();
     q5_mesh.scale.set(1.3,1.3,1.3);
-    q5_mesh.position.x = -48.5;
+    q5_mesh.position.x = -33.5;
     scene.add(q5_mesh);
 
     var dash1_mesh = new THREE.Mesh(line.geometry, ship_dash);
     dash1_mesh.scale.set(3.3,3.3,3.3);
     dash1_mesh.rotation.y = Math.PI/180 * 90;
-    dash1_mesh.position.x = 5;
+    dash1_mesh.position.x = 20;
     scene.add(dash1_mesh);
 
     /** 3个红色三角 **/
@@ -414,7 +465,7 @@
     line4.setGeometry(ship_line4_g, function(p){return 1-p;});
 
     var line4_mesh = new THREE.Mesh(line4.geometry, ship_red_line);
-    line4_mesh.position.set(2, 0, 0);
+    line4_mesh.position.set(17, 0, 0);
 
     var line5_mesh = line4_mesh.clone();
     var line6_mesh = line4_mesh.clone();
@@ -431,14 +482,23 @@
     /**
      * 添加铭牌
      * **/
+
+    // 顶部标签
     var label1Div = document.createElement( 'div' );
-    label1Div.className = 'label';
-    label1Div.textContent = 'Water!!!!!!!!';
+    label1Div.className = 'title2d';
+    label1Div.innerHTML = '<div class="t">Waterdrop</div><div class="l1"></div><div class="l2"></div>';
 
     var label1 = new THREE.CSS2DObject( label1Div );
-    console.log('label有了吗：', label1);
-    label1.position.set( -5, 15, 5 ); // 将其坐标设置为原点偏上
+    label1.position.set( 15, 15, 0); // 将其坐标设置为原点偏上
     water_mesh.add( label1 );
+
+    // 后部标签
+    var label2Div = document.createElement('div');
+    label2Div.className= "label2";
+    label2Div.innerHTML = '<p>这是2.0版本的"水滴"</p><p>它拥有<i>曲率驱动引擎</i>，仍然具备强互作用力外壳</p><p>由半人马星座α星系朝着太阳系行进</p><p>约<i>4个地球年</i>后抵达</p><p>哈勃望远镜已能捕获其图像</p>';
+    var label2 = new THREE.CSS2DObject(label2Div);
+    label2.position.set( 10, 50, 0);
+    water_mesh.add(label2);
 
     /** 铭牌渲染器 **/
     const labelRenderer = new THREE.CSS2DRenderer();
