@@ -17,8 +17,18 @@
       <file leaf-file-name="index3.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index3.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="641">
-              <caret line="68" column="26" lean-forward="false" selection-start-line="68" selection-start-column="26" selection-end-line="68" selection-end-column="26" />
+            <state relative-caret-position="511">
+              <caret line="657" column="13" lean-forward="true" selection-start-line="657" selection-start-column="13" selection-end-line="657" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="414">
+              <caret line="206" column="16" lean-forward="false" selection-start-line="206" selection-start-column="16" selection-end-line="207" selection-end-column="76" />
               <folding />
             </state>
           </provider>
@@ -35,17 +45,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>RenderPass</find>
-      <find>tDiff</find>
-      <find>FXAAShader</find>
-      <find>Reflector</find>
-      <find>SceneUtils</find>
-      <find>CITY_RADIUS</find>
-      <find>countries</find>
-      <find>createCone</find>
-      <find>position</find>
-      <find>ship_line4_m</find>
-      <find>cone_t</find>
       <find>ye</find>
       <find>createPosition</find>
       <find>texture</find>
@@ -63,8 +62,19 @@
       <find>textureLoader</find>
       <find>cameraControls</find>
       <find>info</find>
-      <find>title2d</find>
+      <find>raycaster</find>
+      <find>q4_mesh</find>
+      <find>dash1_mesh</find>
+      <find>ship_dash</find>
+      <find>Basic</find>
+      <find>ship_red_line</find>
+      <find>mouse</find>
+      <find>cubeCamera1</find>
       <find>cubeMeterial</find>
+      <find>scene.add</find>
+      <find>title2d</find>
+      <find>labelRenderer</find>
+      <find>label2</find>
     </findStrings>
     <replaceStrings>
       <replace>ship_red_dash</replace>
@@ -109,8 +119,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="212" />
-    <option name="width" value="1699" />
+    <option name="x" value="602" />
+    <option name="width" value="1321" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
@@ -144,12 +154,6 @@
               <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
               <item name="three_road" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="three_road" type="b2602c69:ProjectViewProjectNode" />
-              <item name="three_road" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -329,26 +333,27 @@
       <workItem from="1528766315342" duration="9387000" />
       <workItem from="1528776115881" duration="7714000" />
       <workItem from="1528851063776" duration="1083000" />
-      <workItem from="1528874876026" duration="3699000" />
+      <workItem from="1528874876026" duration="4124000" />
+      <workItem from="1528943694373" duration="17239000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="191143000" />
+    <option name="totallyTimeSpent" value="208807000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="212" y="0" width="1699" height="1040" extended-state="0" />
+    <frame x="602" y="0" width="1321" height="1040" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15270351" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11494253" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -480,17 +485,9 @@
     <entry file="file://$PROJECT_DIR$/demos/learing_three/src/chapter-03/03-point-light.html" />
     <entry file="file://$PROJECT_DIR$/demos/learing_three/src/chapter-03/02-spot-light.html" />
     <entry file="file://$PROJECT_DIR$/demos/learing_three/src/chapter-02/08-cameras-lookat.html" />
-    <entry file="file://$PROJECT_DIR$/src/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="88" column="18" lean-forward="true" selection-start-line="88" selection-start-column="18" selection-end-line="88" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lib/OrbitControls.js" />
     <entry file="file://$PROJECT_DIR$/src/lib/ReflectorRTT.js" />
     <entry file="file://$PROJECT_DIR$/src/lib/Reflector.js" />
-    <entry file="file://$PROJECT_DIR$/src/index2.html" />
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="682">
@@ -546,14 +543,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
           <caret line="11" column="1" lean-forward="false" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-734">
+          <caret line="34" column="43" lean-forward="false" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="206" column="16" lean-forward="false" selection-start-line="206" selection-start-column="16" selection-end-line="207" selection-end-column="76" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index3.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="641">
-          <caret line="68" column="26" lean-forward="false" selection-start-line="68" selection-start-column="26" selection-end-line="68" selection-end-column="26" />
+        <state relative-caret-position="511">
+          <caret line="657" column="13" lean-forward="true" selection-start-line="657" selection-start-column="13" selection-end-line="657" selection-end-column="13" />
           <folding />
         </state>
       </provider>
