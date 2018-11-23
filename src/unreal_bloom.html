@@ -44,7 +44,7 @@
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       scene.add(camera);
 
-      scene.add(new THREE.AmbientLight(0x101010)); // 环境光
+      scene.add(new THREE.AmbientLight(0x111111)); // 环境光
 
       // 添加一个点光源，效果更明显
       pointLight = new THREE.PointLight(0x22ffff, 1);
@@ -57,8 +57,8 @@
       var bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
       bloomPass.renderToScreen = true;
       bloomPass.threshold = 0; // 门槛，即光亮要多强时才产生光溢出效果
-      bloomPass.strength = 2.8; // 光溢出点强度
-      bloomPass.radius = 1; // 光溢出点半径
+      bloomPass.strength = 3.4; // 光溢出点强度
+      bloomPass.radius = 1.5; // 光溢出点半径
 
       // 后期处理构建者
       composer = new THREE.EffectComposer(renderer);
