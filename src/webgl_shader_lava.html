@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>UV发光魔戒效果</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script src="../build/three.js"></script>
+
+    <!-- 着色器 | 卷积着色器 | BloomPass.js依赖 -->
+    <script src="js/shaders/ConvolutionShader.js"></script>
+    <!-- 着色器 | 全屏4色着色器 | BloomPass.js依赖 -->
+    <script src="js/shaders/CopyShader.js"></script>
+    <!-- 着色器 | 噪点着色器/类似胶片或电视屏幕 | FilmPass.js依赖 -->
+    <script src="js/shaders/FilmShader.js"></script>
+
+    <!-- 后期基础 | 后期效果构建者 -->
+    <script src="js/postprocessing/EffectComposer.js"></script>
+    <!-- 后期基础 | 着色器构造器 -->
+    <script src="js/postprocessing/ShaderPass.js"></script>
+    <!-- 后期基础 | 后期渲染器 -->
+    <script src="js/postprocessing/RenderPass.js"></script>
+    <!-- 后期效果 | 光芒虚化/泛光 -->
+    <script src="js/postprocessing/BloomPass.js"></script>
+    <!-- 后期效果 | 噪点 -->
+    <script src="js/postprocessing/FilmPass.js"></script>
+
+    <!-- 自定义片元着色器 -->
+    <script id="fragmentShader" type="x-shader/x-fragment">
+
+      uniform float time;
+
+      uniform float fogDensity;
+      uniform vec3 fogColor;
+
+      uniform sampler2D texture1;
+      uniform sampler2D texture2;
+
+      varying vec2 vUv;
+
+      void main( void ) {
+
+      	vec2 position = - 1.0 + 2.0 * vUv;
+
+      	vec4 noise = texture2D( texture1, vUv );
+      	vec2 T1 = vUv + vec2( 1.5, - 1.5 ) * time * 0.02;
+      	vec2 T2 = vUv + vec2( - 0.5, 2.0 ) * time * 0.01;
+
+      	T1.x += noise.x * 2.0;
+      	T1.y += noise.y * 2.0;
+      	T2.x -= noise.y * 0.2;
+      	T2.y += noise.z * 0.2;
+
+      	float p = texture2D( texture1, T1 * 2.0 ).a;
+
+      	vec4 color = texture2D( texture2, T2 * 2.0 );
+      	vec4 temp = color * ( vec4( p, p, p, p ) * 2.0 ) + ( color * color - 0.1 );
+
+      	if( temp.r > 1.0 ) { temp.bg += clamp( temp.r - 2.0, 0.0, 100.0 ); }
+      	if( temp.g > 1.0 ) { temp.rb += temp.g - 1.0; }
+      	if( temp.b > 1.0 ) { temp.rg += temp.b - 1.0; }
+
+      	gl_FragColor = temp;
+
+      	float depth = gl_FragCoord.z / gl_FragCoord.w;
+      	const float LOG2 = 1.442695;
+      	float fogFactor = exp2( - fogDensity * fogDensity * depth * depth * LOG2 );
+      	fogFactor = 1.0 - clamp( fogFactor, 0.0, 1.0 );
+
+      	gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor );
+
+      }
+    </script>
+
+    <!-- 自定义定点着色器 -->
+    <script id="vertexShader" type="x-shader/x-vertex">
+
+      uniform vec2 uvScale;
+      varying vec2 vUv;
+
+      void main()
+      {
+
+      	vUv = uvScale * uv;
+      	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+      	gl_Position = projectionMatrix * mvPosition;
+
+      }
+    </script>
+
+    <script>
+      var container; // DOM
+
+      var camera, scene, renderer, composer, clock; // 相机/场景/渲染器/后期构建者/时钟
+
+      var uniforms, mesh; // 着色器参数/圆环模型
+
+      init();
+      animate();
+
+      function init() {
+        container = document.getElementById('container');
+
+        camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 3000);
+        camera.position.z = 4;
+
+        scene = new THREE.Scene();
+
+        clock = new THREE.Clock();
+
+        // 纹理加载器
+        var textureLoader = new THREE.TextureLoader();
+
+        // 自定义着色器需要的通用参数
+        uniforms = {
+          fogDensity: { value: 0.45 }, // 雾化密度
+          fogColor: { value: new THREE.Vector3(0, 0, 0) }, // 雾的颜色
+          time: { value: 1.0 },
+          uvScale: { value: new THREE.Vector2(3.0, 1.0) }, // uv 贴图缩放比例
+          texture1: { value: textureLoader.load('textures/lava/cloud.png') }, // 贴图1
+          texture2: { value: textureLoader.load('textures/lava/lavatile.jpg') }, // 贴图2
+        };
+
+        uniforms.texture1.value.wrapS = uniforms.texture1.value.wrapT = THREE.RepeatWrapping; // uv1的重复方式
+        uniforms.texture2.value.wrapS = uniforms.texture2.value.wrapT = THREE.RepeatWrapping; // uv2的重复方式
+
+        var size = 0.65;
+
+        // 自定义着色器材质
+        var material = new THREE.ShaderMaterial({
+          uniforms: uniforms,
+          vertexShader: document.getElementById('vertexShader').textContent,
+          fragmentShader: document.getElementById('fragmentShader').textContent,
+        });
+
+        // 新建圆环几何体
+        mesh = new THREE.Mesh(new THREE.TorusBufferGeometry(size, 0.3, 30, 30), material);
+        mesh.rotation.x = 0.3;
+        scene.add(mesh);
+
+        // 渲染器
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio); // dpi
+        container.appendChild(renderer.domElement);
+        renderer.autoClear = false; // 自动清理渲染器的缓存：false. 因为最终需要后期效果加原始效果，所以每一帧等后期渲染后再手动清除
+
+        // 后期渲染器
+        var renderModel = new THREE.RenderPass(scene, camera);
+        var effectBloom = new THREE.BloomPass(1.25); // 泛光高亮效果，强度1.25
+        var effectFilm = new THREE.FilmPass(0.35, 0.95, 2048, false); // 噪点效果
+
+        // 后期效果装载器
+        composer = new THREE.EffectComposer(renderer);
+
+        composer.addPass(renderModel);
+        composer.addPass(effectBloom);
+        composer.addPass(effectFilm);
+
+        effectFilm.renderToScreen = true; // 这是最后一个渲染器，所以指定将这个渲染器的结果渲染到屏幕，即各渲染器叠加后的结果渲染到屏幕
+
+        // 监听屏幕大小变更
+        onWindowResize();
+        window.addEventListener('resize', onWindowResize, false);
+      }
+
+      function onWindowResize() {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        composer.reset();
+      }
+
+      //
+
+      function animate() {
+        requestAnimationFrame(animate);
+        render();
+      }
+
+      function render() {
+        var delta = 5 * clock.getDelta();
+
+        uniforms.time.value += 0.2 * delta;
+        renderer.clear(); // 手动清除渲染器的颜色、深度或模板缓存
+        composer.render();
+      }
+    </script>
+  </body>
+</html>

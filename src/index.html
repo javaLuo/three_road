@@ -1,249 +1,248 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <style>
-            body{
-                margin: 0;
-            }
-            canvas{
-                width: 100%;
-                height: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="stats-output"></div>
-        <script src="https://cdn.bootcss.com/three.js/91/three.js"></script>
-        <script src="./lib/Stats.js"></script>
-        <script src="./lib/dat.gui.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stats-output"></div>
+    <script src="./js/three.min.js"></script>
+    <script src="./js/libs/Stats.js"></script>
+    <script src="./js/libs/dat.gui.js"></script>
 
-        <script>
-            // 帧率辅助
-            var stats = new Stats();
-            stats.setMode(0);
-            stats.domElement.style.position = 'absolute';
-            stats.domElement.style.left = '0px';
-            stats.domElement.style.top = '0px';
-            document.getElementById('stats-output').appendChild(stats.domElement);
+    <script>
+      // 帧率辅助
+      var stats = new Stats();
+      stats.setMode(0);
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.left = '0px';
+      stats.domElement.style.top = '0px';
+      document.getElementById('stats-output').appendChild(stats.domElement);
 
-            // GUI辅助
-            var controls = new function(){
-                this.rotationSpeed = 0.01;
-                this.bouncingSpeed = 0.01;
-            };
-            var gui = new dat.GUI();
-            gui.add(controls, 'rotationSpeed', 0, 0.5); // 旋转速度
-            gui.add(controls, 'bouncingSpeed', 0, 0.5); // 弹跳速度
+      // GUI辅助
+      var controls = new function() {
+        this.rotationSpeed = 0.01;
+        this.bouncingSpeed = 0.01;
+      }();
+      var gui = new dat.GUI();
+      gui.add(controls, 'rotationSpeed', 0, 0.5); // 旋转速度
+      gui.add(controls, 'bouncingSpeed', 0, 0.5); // 弹跳速度
 
-            // 三要素
-            var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-            var renderer = new THREE.WebGLRenderer();
+      // 三要素
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      var renderer = new THREE.WebGLRenderer();
 
-            camera.position.set(10,10,10);
-            camera.lookAt(new THREE.Vector3(0,0,0));
-            renderer.setSize(window.innerWidth, window.innerHeight, true);
-            renderer.setClearColor(0x222222);
-            renderer.shadowMap.enabled = true;
-            document.body.appendChild(renderer.domElement);
-            console.log('版本：', THREE.EventDispatcher);
+      camera.position.set(10, 10, 10);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
+      renderer.setSize(window.innerWidth, window.innerHeight, true);
+      renderer.setClearColor(0x222222);
+      renderer.shadowMap.enabled = true;
+      document.body.appendChild(renderer.domElement);
+      console.log('版本：', THREE.EventDispatcher);
 
-            // 轴辅助
-            var axes = new THREE.AxesHelper(20);
-            scene.add(axes);
+      // 轴辅助
+      var axes = new THREE.AxesHelper(20);
+      scene.add(axes);
 
-            function onResize(){
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
+      function onResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
 
-            // 射线Raycaster测试
-            var raycaster = new THREE.Raycaster();
-            var mouse = new THREE.Vector2();
+      // 射线Raycaster测试
+      var raycaster = new THREE.Raycaster();
+      var mouse = new THREE.Vector2();
 
-            function onMouseMove(e) {
-                mouse.x = (e.clientX/window.innerWidth) * 2 -1;
-                mouse.y = - (e.clientY/window.innerHeight) * 2 + 1;
-            }
-            window.addEventListener('mousemove', onMouseMove, false);
+      function onMouseMove(e) {
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      }
+      window.addEventListener('mousemove', onMouseMove, false);
 
-            // 浏览器改变事件
-            window.addEventListener('resize', onResize, false);
-            // 基本立方体
-            var g = new THREE.BoxGeometry(1,1,1);
-            var m = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-            m.blending = THREE.CustomBlending;
-            m.blendEquation = THREE.AddEquation;
-            m.blendSrc = THREE.SrcAlphaFactor;
-            m.blendDst = THREE.OneMinusSrcAlphaFactor;
+      // 浏览器改变事件
+      window.addEventListener('resize', onResize, false);
+      // 基本立方体
+      var g = new THREE.BoxGeometry(1, 1, 1);
+      var m = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+      m.blending = THREE.CustomBlending;
+      m.blendEquation = THREE.AddEquation;
+      m.blendSrc = THREE.SrcAlphaFactor;
+      m.blendDst = THREE.OneMinusSrcAlphaFactor;
 
-            var c = new THREE.Mesh(g, m);
-            c.quaternion.copy(new THREE.Vector4(12,2,2,2));
-            c.castShadow = true;
-            scene.add(c);
+      var c = new THREE.Mesh(g, m);
+      c.quaternion.copy(new THREE.Vector4(12, 2, 2, 2));
+      c.castShadow = true;
+      scene.add(c);
 
-            var helper = new THREE.WireframeGeometry(c, 0xffffff);
-            scene.add(helper);
-            // 环境光
-            var ambientLight = new THREE.AmbientLight(0x222222, 0.5);
-            scene.add(ambientLight);
+      var helper = new THREE.WireframeGeometry(c, 0xffffff);
+      scene.add(helper);
+      // 环境光
+      var ambientLight = new THREE.AmbientLight(0x222222, 0.5);
+      scene.add(ambientLight);
 
-            // 添加聚光灯光源
-            var spotLight = new THREE.SpotLight(0xffffff);
-            spotLight.position.set(0,20,0);
-            spotLight.castShadow = true;
-            scene.add(spotLight);
+      // 添加聚光灯光源
+      var spotLight = new THREE.SpotLight(0xffffff);
+      spotLight.position.set(0, 20, 0);
+      spotLight.castShadow = true;
+      scene.add(spotLight);
 
-            // 添加一个球，当作光源的实体
-            var sp_g = new THREE.SphereGeometry(1,3,3);
-            var sp_m = new THREE.MeshBasicMaterial({ color: '#ffffff' });
-            var sp = new THREE.Mesh(sp_g, sp_m);
-            sp.position.copy(spotLight.position);
-            scene.add(sp);
+      // 添加一个球，当作光源的实体
+      var sp_g = new THREE.SphereGeometry(1, 3, 3);
+      var sp_m = new THREE.MeshBasicMaterial({ color: '#ffffff' });
+      var sp = new THREE.Mesh(sp_g, sp_m);
+      sp.position.copy(spotLight.position);
+      scene.add(sp);
 
-            var MAX_POINTS = 500;
-            var geometry = new THREE.BufferGeometry();
-            var positions = new Float32Array(MAX_POINTS * 3);
-            geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+      var MAX_POINTS = 500;
+      var geometry = new THREE.BufferGeometry();
+      var positions = new Float32Array(MAX_POINTS * 3);
+      geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-            var material = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+      var material = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
 
-            var line = new THREE.Line(geometry, material);
-            scene.add(line);
+      var line = new THREE.Line(geometry, material);
+      scene.add(line);
 
-            var p = line.geometry.attributes.position.array;
+      var p = line.geometry.attributes.position.array;
 
-            // GUI辅助
+      // GUI辅助
 
-            // 创建声音
-//            var listener = new THREE.AudioListener();
-//            camera.add(listener);
-//
-//            var sound = new THREE.PositionalAudio(listener);
-//            var audioLoader = new THREE.AudioLoader();
-//            audioLoader.load('assets/sound1.mp3', function(buffer){
-//                sound.setBuffer(buffer);
-//                sound.setLoop(true);
-//                sound.setVolume(1.5);
-//                sound.play();
-//            });
-//
-//            var g1 = new THREE.SphereGeometry(10,12,8);
-//            var m1 = new THREE.MeshBasicMaterial({ color: 0xff2200 });
-//            var c1 = new THREE.Mesh(g1, m1);
-//            scene.add(c1);
-//            c1.add(sound);
+      // 创建声音
+      //            var listener = new THREE.AudioListener();
+      //            camera.add(listener);
+      //
+      //            var sound = new THREE.PositionalAudio(listener);
+      //            var audioLoader = new THREE.AudioLoader();
+      //            audioLoader.load('assets/sound1.mp3', function(buffer){
+      //                sound.setBuffer(buffer);
+      //                sound.setLoop(true);
+      //                sound.setVolume(1.5);
+      //                sound.play();
+      //            });
+      //
+      //            var g1 = new THREE.SphereGeometry(10,12,8);
+      //            var m1 = new THREE.MeshBasicMaterial({ color: 0xff2200 });
+      //            var c1 = new THREE.Mesh(g1, m1);
+      //            scene.add(c1);
+      //            c1.add(sound);
 
-            // 平面
-            var plane = new THREE.PlaneGeometry(5,5);
-            var material1 = new THREE.MeshLambertMaterial({ color: 0xff00ff, side: THREE.DoubleSide });
-            var mesh1 = new THREE.Mesh(plane, material1);
-            mesh1.receiveShadow = true;
-            // mesh1.castShadow = true;
-            mesh1.position.set(0, -2, 0);
-            mesh1.rotation.set(Math.PI/2,0,0);
-            scene.add(mesh1);
-            animate();
+      // 平面
+      var plane = new THREE.PlaneGeometry(5, 5);
+      var material1 = new THREE.MeshLambertMaterial({ color: 0xff00ff, side: THREE.DoubleSide });
+      var mesh1 = new THREE.Mesh(plane, material1);
+      mesh1.receiveShadow = true;
+      // mesh1.castShadow = true;
+      mesh1.position.set(0, -2, 0);
+      mesh1.rotation.set(Math.PI / 2, 0, 0);
+      scene.add(mesh1);
+      animate();
 
+      // 自定义面测试
+      var material = new THREE.MeshStandardMaterial({ color: 0xcccccc });
 
-            // 自定义面测试
-            var material = new THREE.MeshStandardMaterial( { color : 0xcccccc } );
+      //create a triangular geometry
+      var geometry2 = new THREE.Geometry();
+      geometry2.vertices.push(new THREE.Vector3(-5, 0, 0));
+      geometry2.vertices.push(new THREE.Vector3(0, 5, 0));
+      geometry2.vertices.push(new THREE.Vector3(5, 5, 0));
+      //            geometry2.vertices.push( new THREE.Vector3(  15,  15, 0 ) );
+      //            geometry2.vertices.push( new THREE.Vector3(  15,  10, 0 ) );
+      //            geometry2.vertices.push( new THREE.Vector3(  25,  25, 0 ) );
 
-            //create a triangular geometry
-            var geometry2 = new THREE.Geometry();
-            geometry2.vertices.push( new THREE.Vector3( -5, 0, 0 ) );
-            geometry2.vertices.push( new THREE.Vector3(  0, 5, 0 ) );
-            geometry2.vertices.push( new THREE.Vector3(  5,  5, 0 ) );
-//            geometry2.vertices.push( new THREE.Vector3(  15,  15, 0 ) );
-//            geometry2.vertices.push( new THREE.Vector3(  15,  10, 0 ) );
-//            geometry2.vertices.push( new THREE.Vector3(  25,  25, 0 ) );
+      //create a new face using vertices 0, 1, 2
+      var normal = new THREE.Vector3(0, 1, 0); //optional
+      var color = new THREE.Color(0xffff00); //optional
+      var materialIndex = 0; //optional
+      var face = new THREE.Face3(1, 0, 2, normal, color, materialIndex);
+      //var face2 = new THREE.Face3( 1, 0, 4, normal, color, materialIndex );
 
-            //create a new face using vertices 0, 1, 2
-            var normal = new THREE.Vector3( 0, 1, 0 ); //optional
-            var color = new THREE.Color( 0xffff00 ); //optional
-            var materialIndex = 0; //optional
-            var face = new THREE.Face3( 1, 0, 2, normal, color, materialIndex );
-            //var face2 = new THREE.Face3( 1, 0, 4, normal, color, materialIndex );
+      //add the face to the geometry's faces array
+      geometry2.faces.push(face);
 
-            //add the face to the geometry's faces array
-            geometry2.faces.push( face );
+      geometry2.computeBoundingSphere();
+      console.log(geometry2.lineDistances);
+      //geometry2.faces.push( face2 );
 
-            geometry2.computeBoundingSphere();
-            console.log(geometry2.lineDistances);
-            //geometry2.faces.push( face2 );
+      //the face normals and vertex normals can be calculated automatically if not supplied above
+      //geometry2.computeFaceNormals();
+      // geometry2.computeVertexNormals();
 
-            //the face normals and vertex normals can be calculated automatically if not supplied above
-            //geometry2.computeFaceNormals();
-           // geometry2.computeVertexNormals();
+      scene.add(new THREE.Mesh(geometry2, material));
 
-            scene.add( new THREE.Mesh( geometry2, material ) );
+      function up() {
+        var x, y, z, index;
+        x = y = z = index = 0;
 
-            function up() {
-                var x, y, z, index;
-                x = y = z = index = 0;
+        for (var i = 0, l = MAX_POINTS; i < l; i++) {
+          x += (Math.random() - 0.5) * 10;
+          y += (Math.random() - 0.5) * 10;
+          z += (Math.random() - 0.5) * 10;
 
-                for ( var i = 0, l = MAX_POINTS; i < l; i ++ ) {
-                    x += ( Math.random() - 0.5 ) * 10;
-                    y += ( Math.random() - 0.5 ) * 10;
-                    z += ( Math.random() - 0.5 ) * 10;
+          p[index++] = x;
+          p[index++] = y;
+          p[index++] = z;
+        }
+      }
+      up();
 
-                    p[ index ++ ] = x;
-                    p[ index ++ ] = y;
-                    p[ index ++ ] = z;
-                }
-            }
-            up();
+      // 渲染方法
+      var j = 2;
+      var ok = true;
+      var step = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        stats.update();
 
-            // 渲染方法
-            var j = 2;
-            var ok = true;
-            var step = 0;
-            function animate() {
-                requestAnimationFrame(animate);
-                stats.update();
+        raycaster.setFromCamera(mouse, camera);
+        var intersects = raycaster.intersectObjects(scene.children);
+        for (let i = 0; i < intersects.length; i++) {
+          intersects[i].object.material.color.set(0xff0000);
+        }
+        step += controls.bouncingSpeed;
 
-                raycaster.setFromCamera(mouse, camera);
-                var intersects = raycaster.intersectObjects(scene.children);
-                for(let i=0;i<intersects.length;i++) {
-                    intersects[i].object.material.color.set(0xff0000);
-                }
-                step += controls.bouncingSpeed;
+        c.position.x = 2 * Math.cos(step);
+        c.position.y = 2 * Math.abs(Math.sin(step));
 
-                c.position.x = (2*(Math.cos(step)));
-                c.position.y = (2*Math.abs(Math.sin(step)));
+        c.rotation.x += controls.rotationSpeed;
+        c.rotation.y += controls.rotationSpeed;
 
-                c.rotation.x += controls.rotationSpeed;
-                c.rotation.y += controls.rotationSpeed;
+        if (spotLight.position.y > 3) {
+          spotLight.position.y -= 0.01;
+          sp.position.copy(spotLight.position);
+        }
+        if (ok) {
+          mesh1.position.y -= 0.02;
+          if (mesh1.position.y < -6) {
+            ok = false;
+          }
+        } else {
+          mesh1.position.y += 0.02;
+          if (mesh1.position.y > -1) {
+            ok = true;
+          }
+        }
 
-                if(spotLight.position.y > 3) {
-                    spotLight.position.y -= 0.01;
-                    sp.position.copy(spotLight.position);
-                }
-                if(ok) {
-                    mesh1.position.y -=0.02;
-                    if (mesh1.position.y<-6) {
-                        ok = false;
-                    }
-                } else {
-                    mesh1.position.y +=0.02;
-                    if (mesh1.position.y>-1) {
-                        ok = true;
-                    }
-                }
+        // mesh1.rotation.x += 0.01;
 
-               // mesh1.rotation.x += 0.01;
+        line.geometry.setDrawRange(0, j++);
+        if (j >= 8) {
+          up();
+          line.geometry.attributes.position.needsUpdate = true;
+          j = 2;
+        }
 
-                line.geometry.setDrawRange(0, j++);
-                if(j>=8){
-                    up();
-                    line.geometry.attributes.position.needsUpdate = true;
-                    j = 2;
-                }
-
-                renderer.render(scene, camera);
-            }
-        </script>
-    </body>
+        renderer.render(scene, camera);
+      }
+    </script>
+  </body>
 </html>

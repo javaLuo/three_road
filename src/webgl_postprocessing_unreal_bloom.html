@@ -8,20 +8,20 @@
   <body>
     <div id="container"></div>
 
-    <script src="lib/three.min.js"></script>
+    <script src="js/three.min.js"></script>
 
     <!-- 后期基础 | 后期效果构建者 -->
-    <script src="lib/EffectComposer.js"></script>
+    <script src="js/postprocessing/EffectComposer.js"></script>
     <!-- 后期基础 | 后期渲染器 -->
-    <script src="lib/RenderPass.js"></script>
+    <script src="js/postprocessing/RenderPass.js"></script>
     <!-- 后期基础 | 着色器构造器 -->
-    <script src="lib/ShaderPass.js"></script>
+    <script src="js/postprocessing/ShaderPass.js"></script>
     <!-- 着色器 | 全屏4色着色器 | UnrealBloomPass.js依赖 -->
-    <script src="lib/CopyShader.js"></script>
+    <script src="js/shaders/CopyShader.js"></script>
     <!-- 着色器 | 高光着色器 | UnrealBloomPass.js依赖 -->
-    <script src="lib/LuminosityHighPassShader.js"></script>
+    <script src="js/shaders/LuminosityHighPassShader.js"></script>
     <!-- 后期效果 | 光芒虚化 -->
-    <script src="lib/UnrealBloomPass.js"></script>
+    <script src="js/postprocessing/UnrealBloomPass.js"></script>
 
     <script>
       let scene, camera, pointLight;
