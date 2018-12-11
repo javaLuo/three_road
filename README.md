@@ -20,4 +20,4 @@
 
 官网： https://threejs.org/ <br/>
 官方文档：https://threejs.org/docs/index.html （现在官方有中文版文档了）
-某大神网站：https://alteredqualia.com/
+Demo 网站：https://alteredqualia.com/
