@@ -13,12 +13,14 @@
     </style>
   </head>
   <body>
+    <div id="a" style="text-align: center">\251</div>
     <div id="stats-output"></div>
     <script src="./js/three.min.js"></script>
     <script src="./js/libs/Stats.js"></script>
     <script src="./js/libs/dat.gui.js"></script>
 
     <script>
+      document.getElementById('a').innerHTML = '\251';
       // 帧率辅助
       var stats = new Stats();
       stats.setMode(0);

@@ -23,7 +23,7 @@
         container = document.createElement('div');
         document.body.appendChild(container);
 
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 1000);
         camera.position.set(-1.8, 0.9, 2.7);
 
         controls = new THREE.OrbitControls(camera);
@@ -33,31 +33,52 @@
         // envmap
         var path = 'js/textures/cube/Bridge2/';
         var format = '.jpg';
-        var envMap = new THREE.CubeTextureLoader().load([
-          path + 'posx' + format,
-          path + 'negx' + format,
-          path + 'posy' + format,
-          path + 'negy' + format,
-          path + 'posz' + format,
-          path + 'negz' + format,
-        ]);
+        var envMap = new THREE.CubeTextureLoader().load([path + 'posx' + format, path + 'negx' + format, path + 'posy' + format, path + 'negy' + format, path + 'posz' + format, path + 'negz' + format]);
 
         scene = new THREE.Scene();
-        scene.background = envMap;
+        // scene.background = envMap;
 
         // 半球光
-        light = new THREE.HemisphereLight(0xbbbbff, 0x444422);
-        light.position.set(0, 1, 0);
+        light = new THREE.AmbientLight(0x666666);
         scene.add(light);
+
+        var light2 = new THREE.DirectionalLight(0xffffff, 1);
+        light2.position.set(0.5, 0.5, 0);
+        scene.add(light2);
+
+        // 3维箭头辅助
+        var axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
 
         // 加载模型
         var loader = new THREE.GLTFLoader();
+
+        // loader.load(
+        //   'js/models/gltf/girl/scene.gltf',
+        //   function(gltf) {
+        //     gltf.scene.traverse(function(child) {
+        //       if (child.isMesh) {
+        //         child.material.envMap = envMap;
+        //       }
+        //     });
+
+        //     scene.add(gltf.scene);
+        //   },
+        //   undefined,
+        //   function(e) {
+        //     console.error(e);
+        //   },
+        // );
+
         loader.load(
-          'js/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',
+          'js/models/gltf/ocean2/scene.gltf',
           function(gltf) {
             gltf.scene.traverse(function(child) {
               if (child.isMesh) {
+                console.log('this:', gltf.scene, child);
                 child.material.envMap = envMap;
+                var box = new THREE.BoxHelper(child, 0xffff00);
+                scene.add(box);
               }
             });
 
@@ -72,6 +93,7 @@
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0xaaaaaa, 1.0);
         renderer.gammaOutput = true; // 所有纹理和颜色需要乘以gamma输出，颜色会亮丽许多
         container.appendChild(renderer.domElement);
 
