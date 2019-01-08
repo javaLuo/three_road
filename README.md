@@ -25,3 +25,4 @@ Demo 网站：https://alteredqualia.com/ <br/>
 模型网：https://sketchfab.com <br/>
 shader网： https://www.shadertoy.com/ <br/>
 暮志未晚：http://www.wjceo.com/ <br/>
+skybox下载：http://www.custommapmakers.org/skyboxes.php <br/>
