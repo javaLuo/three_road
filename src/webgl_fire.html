@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>three.js webgl - fire - texture</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <script src="js/three.min.js"></script>
+    <script src="js/objects/fire.js"></script>
+    <script src="js/controls/OrbitControls.js"></script>
+  </head>
+  <body>
+    <script>
+      var camera, scene, renderer;
+      var fire;
+      var params = {
+        color1: '#ffffff', // 内焰颜色
+        color2: '#ffa000', // 外焰颜色
+        color3: '#000000', // 烟雾颜色
+        colorBias: 0.8, // 颜色偏移，内焰限制，0～1， 数值越大，内焰范围越小
+        burnRate: 0.35, // 燃烧率，火焰整体辐射范围，0～10，数值越大，范围越小
+        diffuse: 1.33, // 弥散，火焰模糊层度，0～5，数值越大越模糊
+        viscosity: 0.25, // 粘稠度，0～5，越大火焰里面的形状就越弯曲
+        expansion: -0.25, // 火焰的强弱夸张程度，-1～1，即小火～大火
+        swirl: 50.0, // 烟雾的扩散程度
+        drag: 0.35, // 火焰的抖动频率，0～1，越大越稳定
+        airSpeed: 12.0, // 空气的流动速度，0～50，越大火焰动得越快
+        windX: 0.0, // 横向风的速度
+        windY: 0.75, // 纵向风的速度
+        speed: 500.0, // 风速，0～500，越大吹得越剧烈
+        massConservation: false, // 是否重影
+      };
+
+      init();
+      animate();
+
+      function init() {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        // 相机
+        camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000);
+        camera.position.z = 25;
+
+        // 场景
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+
+        // 环境光
+        var ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+        scene.add(ambientLight);
+
+        // 点光源
+        var pointLight = new THREE.PointLight(0xffffff, 0.8);
+        camera.add(pointLight);
+        scene.add(camera);
+
+        // 平面
+        var plane = new THREE.PlaneBufferGeometry(20, 20);
+
+        // 火焰对象
+        fire = new THREE.Fire(plane, {
+          textureWidth: 512,
+          textureHeight: 512,
+          debug: false,
+        });
+        fire.position.z = -5;
+        fire.color1.set(0x00bdf7); // 内焰颜色
+        fire.color2.set(0x1b3fb6); // 外焰颜色
+        fire.color3.set(0x001869); // 烟雾颜色
+        fire.windVector.x = 0.0; // 横向风的速度
+        fire.windVector.y = 0.15; // 纵向风的速度
+        fire.colorBias = 0.1; // 内焰限制，0～1， 数值越大，内焰范围越小
+        fire.burnRate = 2.6; // 火焰整体辐射范围，0～10，数值越大，范围越小
+        fire.diffuse = 1.0; // 火焰模糊层度，0～5，数值越大越模糊
+        fire.viscosity = 0.5; // 空气流动速度，0～5，越大火焰扩散越大
+        fire.expansion = 0.75; // 火焰的强度，-1～1，即小火～大火
+        fire.swirl = 1500.0; // 烟雾大扩散程度 0， 越大烟雾越不扩散
+        fire.drag = 0.0; // 火焰的抖动频率，0～1，越大越稳定
+        fire.airSpeed = 40.0; // 空气的流动速度，0～50，越大火焰动得越快
+        fire.speed = 300.0; // 风速，0～500，越大吹得越剧烈
+        fire.massConservation = false; // 是否重影
+        scene.add(fire);
+
+        fire.clearSources();
+        fire.addSource(0.5, 0.2, 0.1, 0.8, 0.0, 0.1); // U，V, 半径，火焰密度，风X，风Y
+
+        // 渲染器
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.autoClear = false;
+        document.body.appendChild(renderer.domElement);
+
+        // 旋转控制器
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.minDistance = 10;
+        controls.maxDistance = 100;
+        controls.enablePan = false;
+
+        window.addEventListener('resize', onWindowResize, false);
+      }
+
+      // 文字纹理
+      function makeText() {
+        var text = 'Three JS';
+        var size = 180;
+        var color = '#FF0040';
+        var canvas = document.createElement('canvas');
+        canvas.width = 1024;
+        canvas.height = 1024;
+        var context = canvas.getContext('2d');
+        context.font = size + 'pt Arial';
+        context.strokeStyle = 'black';
+        context.strokeRect(0, 0, canvas.width, canvas.height);
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.lineWidth = 5;
+        context.strokeStyle = color;
+        context.fillStyle = 'black';
+        context.strokeText(text, canvas.width / 2, canvas.height * 0.75);
+        var texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
+        fire.setSourceMap(texture);
+      }
+
+      // 窗口大小改变
+      function onWindowResize() {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      // 基本动画循环
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.clear();
+        renderer.render(scene, camera);
+      }
+    </script>
+  </body>
+</html>
