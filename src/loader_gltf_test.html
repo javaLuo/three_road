@@ -38,14 +38,14 @@
         scene = new THREE.Scene();
         scene.background = envMap;
 
-        light = new THREE.AmbientLight(0xaaaaaa);
+        light = new THREE.AmbientLight(0xccaaaa);
         scene.add(light);
 
         var light2 = new THREE.DirectionalLight(0xffffff, 2);
         light2.position.set(0.5, 0.5, 0);
-        scene.add(light2);
+        // scene.add(light2);
 
-        scene.add(new THREE.AmbientLight(0x666666));
+        // scene.add(new THREE.AmbientLight(0x666666));
         // 加载模型
         // var loader = new THREE.GLTFLoader();
         // loader.load(
@@ -69,13 +69,10 @@
 
         let girl_actions = {};
         loader.load(
-          'js/models/gltf/ocean/scene.gltf',
+          'js/models/gltf/blackhole/scene.gltf',
           function(gltf) {
-            console.log('gltf:', gltf);
-
             gltf.scene.traverse(function(child) {
               if (child.isMesh) {
-                console.log('this:', gltf.scene, child);
                 //child.material.color = 0xff0000;
                 var box = new THREE.BoxHelper(child, 0xffff00);
                 scene.add(box);
@@ -85,12 +82,12 @@
             girl_animateMixer = new THREE.AnimationMixer(gltf.scene); // 以此模型构建动画混合器
 
             let clip = gltf.animations[0]; // 1个动作
-            console.log('动画：', gltf.animations);
             let action = girl_animateMixer.clipAction(clip);
             action.clampWhenFinished = true; // 动画完成时是否保持最后一帧动作
-            action.loop = THREE.LoopPingPong; // 循环的次数
+            action.loop = THREE.LoopRepeat; // 循环的次数
 
             girl_actions[clip.name] = action;
+            console.log('到这了吗：', gltf.scene);
             scene.add(gltf.scene);
             animate();
             setTimeout(() => {
@@ -108,7 +105,7 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor('#aa0000', 1);
-        renderer.gammaOutput = false; // 所有纹理和颜色需要乘以gamma输出，颜色会亮丽许多
+        renderer.gammaOutput = true; // 所有纹理和颜色需要乘以gamma输出，颜色会亮丽许多
         container.appendChild(renderer.domElement);
 
         window.addEventListener('resize', onWindowResize, false);

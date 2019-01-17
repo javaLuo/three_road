@@ -5,31 +5,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="makeText()">火焰文字</button>
     <script src="js/three.min.js"></script>
     <script src="js/objects/fire.js"></script>
     <script src="js/controls/OrbitControls.js"></script>
-  </head>
-  <body>
     <script>
       var camera, scene, renderer;
       var fire;
-      var params = {
-        color1: '#ffffff', // 内焰颜色
-        color2: '#ffa000', // 外焰颜色
-        color3: '#000000', // 烟雾颜色
-        colorBias: 0.8, // 颜色偏移，内焰限制，0～1， 数值越大，内焰范围越小
-        burnRate: 0.35, // 燃烧率，火焰整体辐射范围，0～10，数值越大，范围越小
-        diffuse: 1.33, // 弥散，火焰模糊层度，0～5，数值越大越模糊
-        viscosity: 0.25, // 粘稠度，0～5，越大火焰里面的形状就越弯曲
-        expansion: -0.25, // 火焰的强弱夸张程度，-1～1，即小火～大火
-        swirl: 50.0, // 烟雾的扩散程度
-        drag: 0.35, // 火焰的抖动频率，0～1，越大越稳定
-        airSpeed: 12.0, // 空气的流动速度，0～50，越大火焰动得越快
-        windX: 0.0, // 横向风的速度
-        windY: 0.75, // 纵向风的速度
-        speed: 500.0, // 风速，0～500，越大吹得越剧烈
-        massConservation: false, // 是否重影
-      };
 
       init();
       animate();
@@ -103,7 +100,7 @@
 
       // 文字纹理
       function makeText() {
-        var text = 'Three JS';
+        var text = 'Hello';
         var size = 180;
         var color = '#FF0040';
         var canvas = document.createElement('canvas');
