@@ -28,3 +28,4 @@ shader网： https://www.shadertoy.com/ <br/>
 暮志未晚：http://www.wjceo.com/ <br/>
 skybox下载：http://www.custommapmakers.org/skyboxes.php <br/>
 特效：http://lab.samsy.ninja/ <br/>
+相机跟随路径移动： https://codeday.me/bug/20190830/1771022.html <br/>
